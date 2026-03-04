@@ -1,6 +1,6 @@
 "use client"
 import { getSocket } from '@/lib/socket';
-import { createContext, useEffect } from 'react';
+import { createContext, useEffect, useContext } from 'react';
 import type { Socket } from 'socket.io-client';
 
 const SocketContext = createContext<Socket | null>(null);
@@ -26,7 +26,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 }
 
 export const useSocket = () =>{
-    const context = createContext(SocketContext);
+    const context = useContext(SocketContext);
     if(!context){
         throw new Error("Context can be created only inside the provider")
     }

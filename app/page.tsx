@@ -1,14 +1,18 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent} from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
+import { useSocket } from "@/contexts/socketContext"
+import { useRouter } from "next/navigation"
 
 export default function Home() {
   const [name, setName] = useState("")
   const [error, setError] = useState("")
+  const socket = useSocket();
+  const router = useRouter()
 
   const handleCreate = () => {
     const trimmed = name.trim()
@@ -20,7 +24,12 @@ export default function Home() {
 
     setError("")
     console.log("Creating contest for:", trimmed)
-    // trigger room creation logic here
+    socket.emit("join-room")
+    socket.on("room-created", (roomId) => {
+      console.log("Room created with roomId", roomId);
+      router.push(`/room/${roomId}`)
+    })
+
   }
 
   return (
@@ -38,7 +47,7 @@ export default function Home() {
 
       {/* Card */}
       <Card className="w-full max-w-md bg-gray-800/70 backdrop-blur-lg border border-gray-700 shadow-2xl rounded-2xl">
-       
+
         <CardContent>
           <form
             className="space-y-6"

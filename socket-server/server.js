@@ -11,62 +11,34 @@ const io = new Server(server, {
   }
 });
 
-// In-memory room store (temporary for learning)
-const rooms = {};
-
+let rooms = {}
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
-  // CREATE ROOM
-  socket.on("create-room", () => {
-    const roomId = crypto.randomBytes(4).toString("hex");
+  socket.on("join-room", () => {
+    const roomId = crypto.randomBytes(8).toString("hex");
 
     rooms[roomId] = {
       host: socket.id,
-      players: [socket.id],
-      status: "waiting"
-    };
+      players: [socket.id]
+    }
 
-    socket.join(roomId);
+    socket.join(roomId)
+    socket.emit("room-created", roomId)
+    io.to(roomId).emit("room-update", {
+      players: rooms[roomId].players
+    })
+  })
 
-    socket.emit("room-created", roomId);
-    io.to(roomId).emit("room-update", rooms[roomId]);
-
-    console.log("Room created:", roomId);
-  });
-
-  // JOIN ROOM
   socket.on("join-room", (roomId) => {
     if (!rooms[roomId]) {
-      socket.emit("error-message", "Room does not exist");
-      return;
+      socket.emit("Room does not exist.")
+      return
     }
+    rooms[roomId].players.add(socket.id)
+    socket.emit("Player: " + socket.id + "," + " was added to the room: " + roomId)
 
-   if(rooms[roomId].players.includes(socket.id)){
-    console.log("Player already exists..")
-    return
-   }
-
-    rooms[roomId].players.push(socket.id);
-    socket.join(roomId);
-
-    io.to(roomId).emit("room-update", rooms[roomId]);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
-
-    // remove user from any room
-    for (const roomId in rooms) {
-      const room = rooms[roomId];
-      room.players = room.players.filter(id => id !== socket.id);
-
-      if (room.players.length === 0) {
-        delete rooms[roomId];
-        console.log("Room deleted:", roomId);
-      }
-    }
-  });
+  })
 });
 
 server.listen(4000, () => {
