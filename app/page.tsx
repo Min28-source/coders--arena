@@ -1,18 +1,28 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { useSocket } from "@/contexts/socketContext"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
+
+import LetterGlitch from "@/components/LetterGlitch"
 
 export default function Home() {
-  const [name, setName] = useState("")
-  const [error, setError] = useState("")
-  const socket = useSocket();
+  const [name, setName] = useState<string>("")
+  const [error, setError] = useState<string>("")
+  const [roomId, setRoomId] = useState<string | null>(null)
+
+  const socket = useSocket()
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    const roomParams = searchParams.get("roomId")
+    setRoomId(roomParams)
+  }, [searchParams])
 
   const handleCreate = () => {
     const trimmed = name.trim()
@@ -23,20 +33,42 @@ export default function Home() {
     }
 
     setError("")
-    console.log("Creating contest for:", trimmed)
-    socket.emit("join-room")
-    socket.on("room-created", (roomId) => {
-      console.log("Room created with roomId", roomId);
-      router.push(`/room/${roomId}`)
-    })
 
+    if (roomId) {
+      socket.emit("join-room", name, roomId)
+
+      socket.once("joined-room", () => {
+        localStorage.setItem("roomId", roomId)
+        router.push(`/room/${roomId}`)
+      })
+    } else {
+      socket.emit("create-room", name)
+
+      socket.once("room-created", (joinedRoomId) => {
+        localStorage.setItem("roomId", joinedRoomId)
+        router.push(`/room/${joinedRoomId}`)
+      })
+    }
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center px-4">
+    <div className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
+
+      {/* Letter Glitch Background */}
+      <div className="absolute inset-0 -z-20">
+        <LetterGlitch
+          glitchSpeed={50}
+          centerVignette={true}
+          outerVignette={false}
+          smooth={true}
+        />
+      </div>
+
+      {/* Dark overlay for readability */}
+      <div className="absolute inset-0 bg-black/60 -z-10" />
 
       {/* Heading */}
-      <div className="absolute top-16 text-center">
+      <div className="absolute top-16 text-center z-10">
         <h1 className="text-4xl md:text-5xl font-bold text-white tracking-wide">
           Code Arena
         </h1>
@@ -46,8 +78,7 @@ export default function Home() {
       </div>
 
       {/* Card */}
-      <Card className="w-full max-w-md bg-gray-800/70 backdrop-blur-lg border border-gray-700 shadow-2xl rounded-2xl">
-
+      <Card className="z-10 w-full max-w-md bg-gray-800/70 backdrop-blur-lg border border-gray-700 shadow-2xl rounded-2xl">
         <CardContent>
           <form
             className="space-y-6"
@@ -69,8 +100,11 @@ export default function Home() {
                   if (error) setError("")
                 }}
                 placeholder="Enter your name"
-                className={`bg-gray-900 text-white border ${error ? "border-red-500 focus-visible:ring-red-500" : "border-gray-600"
-                  }`}
+                className={`bg-gray-900 text-white border ${
+                  error
+                    ? "border-red-500 focus-visible:ring-red-500"
+                    : "border-gray-600"
+                }`}
               />
 
               {error && (
@@ -85,11 +119,12 @@ export default function Home() {
               disabled={!name.trim()}
               className="w-full bg-gray-700 hover:bg-gray-600 text-gray-200 border border-gray-600"
             >
-              Create Contest
+              Enter Contest
             </Button>
           </form>
         </CardContent>
       </Card>
+
     </div>
   )
 }

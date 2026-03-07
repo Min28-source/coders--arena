@@ -15,29 +15,42 @@ let rooms = {}
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
-  socket.on("join-room", () => {
+  //host creating room
+  socket.on("create-room", (name) => {
     const roomId = crypto.randomBytes(8).toString("hex");
 
     rooms[roomId] = {
       host: socket.id,
-      players: [socket.id]
+      players: [{ id: socket.id, name: name }],
+      status: "waiting"
     }
 
     socket.join(roomId)
     socket.emit("room-created", roomId)
-    io.to(roomId).emit("room-update", {
-      players: rooms[roomId].players
-    })
+
+    io.to(roomId).emit("players-update", rooms[roomId].players)
   })
 
-  socket.on("join-room", (roomId) => {
+  //player joining room
+  socket.on("join-room", (name, roomId) => {
     if (!rooms[roomId]) {
-      socket.emit("Room does not exist.")
-      return
+      socket.emit("Room does not exist.");
+      return;
     }
-    rooms[roomId].players.add(socket.id)
-    socket.emit("Player: " + socket.id + "," + " was added to the room: " + roomId)
 
+    socket.join(roomId)
+
+    rooms[roomId].players.push({ id: socket.id, name: name });
+    socket.emit("joined-room", roomId);
+    console.log(socket.id + " joined room: " + roomId);
+
+    io.to(roomId).emit("players-update", rooms[roomId].players)
+    console.log(rooms[roomId].players)
+  })
+
+  //player asking for other players in the room
+  socket.on("get-players-data", (roomId) => {
+    io.to(roomId).emit("players-update", rooms[roomId].players)
   })
 });
 
