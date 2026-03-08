@@ -5,6 +5,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import AddPlayersDialog from "./AddPlayersDialog"
 import { TextShimmer } from "./ui/text-shimmer";
 import { useSocket } from "@/contexts/socketContext";
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 
 const AnimatedMenuToggle = ({
   toggle,
@@ -133,6 +143,7 @@ const Sidebar = () => {
   }
 
   const [players, setPlayers] = useState<Player[]>([])
+  const [started, setStarted] = useState<Boolean>(false)
   const [isOpen, setIsOpen] = useState(false);
 
   const socket = useSocket();
@@ -149,6 +160,11 @@ const Sidebar = () => {
     }
   }, [])
 
+  const handleClick = () => {
+    socket.emit("start-contest", localStorage.getItem('roomId'));
+    console.log("Starting contest...")
+  }
+
   const mobileSidebarVariants = {
     hidden: { x: "-100%" },
     visible: { x: 0 },
@@ -157,106 +173,122 @@ const Sidebar = () => {
   const toggleSidebar = () => setIsOpen(!isOpen);
 
   return (
-    <div className="flex h-screen">
+      <div className="flex h-screen">
 
-      {/* Mobile Sidebar */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            variants={mobileSidebarVariants}
-            transition={{ duration: 0.3 }}
-            className="md:hidden fixed inset-0 z-50 bg-white text-black"
-          >
-            <div className="flex flex-col h-full">
+        {/* Mobile Sidebar */}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={mobileSidebarVariants}
+              transition={{ duration: 0.3 }}
+              className="md:hidden fixed inset-0 z-50 bg-white text-black"
+            >
+              <div className="flex flex-col h-full">
 
-              <div className="p-4 border-b border-gray-200">
-                <p className="font-semibold">Code Arena</p>
-                <p className="text-sm text-gray-500">Code. Compete. Conquer</p>
-              </div>
-
-              <nav className="flex-1 p-4 overflow-y-auto">
-
-                <div className="px-1 pb-2">
-                  <p className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
-                    Players in the Room
-                  </p>
+                <div className="p-4 border-b border-gray-200">
+                  <p className="font-semibold">Code Arena</p>
+                  <p className="text-sm text-gray-500">Code. Compete. Conquer</p>
                 </div>
 
-                <ul>
-                  {players.map((player) => (
-                    <li key={player.id} className="mb-2">
-                      <button className="flex gap-2 font-medium text-sm items-center w-full py-2 px-4 rounded-xl hover:bg-gray-100">
-                        {player.name}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
+                <nav className="flex-1 p-4 overflow-y-auto">
 
-              </nav>
+                  <div className="px-1 pb-2">
+                    <p className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
+                      Players in the Room
+                    </p>
+                  </div>
 
-              <div className="p-4 border-t border-gray-200">
-                <AddPlayersDialog />
+                  <ul>
+                    {players.map((player) => (
+                      <li key={player.id} className="mb-2">
+                        <button className="flex gap-2 font-medium text-sm items-center w-full py-2 px-4 rounded-xl hover:bg-gray-100">
+                          {player.name}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+
+                </nav>
               </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        {/* Desktop Sidebar */}
+        <div className="hidden md:flex flex-col fixed top-0 left-0 h-full w-64 bg-white text-black shadow">
 
-      {/* Desktop Sidebar */}
-      <div className="hidden md:flex flex-col fixed top-0 left-0 h-full w-64 bg-white text-black shadow">
-
-        <div className="p-4 border-b border-gray-200">
-          <p className="font-semibold">Code Arena</p>
-          <p className="text-sm text-gray-500">Code. Compete. Conquer.</p>
-        </div>
-
-        <nav className="flex-1 p-4 overflow-y-auto">
-
-          {/* HEADING ADDED HERE */}
-          <div className="px-1 pb-2">
-            <p className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
-              Players in Room
-            </p>
+          <div className="p-4 border-b border-gray-200">
+            <p className="font-semibold">Code Arena</p>
+            <p className="text-sm text-gray-500">Code. Compete. Conquer.</p>
           </div>
 
-          <ul>
-            {players.map((player) => (
-              <li key={player.id} className="mb-2">
-                <button className="flex gap-2 font-medium text-sm items-center w-full py-2 px-4 rounded-xl hover:bg-gray-100">
-                  {player.name}
-                </button>
-              </li>
-            ))}
-          </ul>
+          <nav className="flex-1 p-4 overflow-y-auto">
 
-        </nav>
+            <div className="px-1 pb-2">
+              <p className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
+                Players in the contest
+              </p>
+            </div>
 
-        <div className="p-4 border-t border-gray-200">
-          <AddPlayersDialog />
+            <ul>
+              {players.map((player) => (
+                <li key={player.id} className="mb-2">
+                  <button className="flex gap-2 font-medium text-sm items-center w-full py-2 px-4 rounded-xl hover:bg-gray-100">
+                    {player.name}
+                  </button>
+                </li>
+              ))}
+            </ul>
+
+          </nav>
+
+        </div>
+
+        <div className="flex-1 ml-0 md:ml-64">
+
+          <div className="p-4 bg-gray-100 border-b border-gray-200 md:hidden flex justify-between items-center">
+            <span></span>
+            <AnimatedMenuToggle toggle={toggleSidebar} isOpen={isOpen} />
+          </div>
+
+          <div className="w-full min-h-screen flex items-center justify-center">
+            <div className="fixed inset-0 flex items-center justify-center pointer-events-none">
+              <Card className="w-full max-w-sm pointer-events-auto">
+                <CardHeader>
+                  <CardTitle>Waiting...</CardTitle>
+                  <CardDescription>
+                    You can ask the host to start the contest immediately.
+                  </CardDescription>
+                </CardHeader>
+
+                <CardContent>
+                  <div className="flex flex-col gap-6">
+                    <div className="grid gap-2">
+                      <TextShimmer className="text-xl" duration={1}>
+                        Waiting for other players to join the contest...
+                      </TextShimmer>
+                    </div>
+                  </div>
+                </CardContent>
+
+                <CardFooter className="flex flex-col gap-2">
+                  <AddPlayersDialog />
+                  <Button variant="outline" className="w-full" onClick={handleClick}>
+                    Start contest
+                  </Button>
+                </CardFooter>
+              </Card>
+            </div>
+
+          </div>
+
         </div>
 
       </div>
-
-      <div className="flex-1 ml-0 md:ml-64">
-
-        <div className="p-4 bg-gray-100 border-b border-gray-200 md:hidden flex justify-between items-center">
-          <span></span>
-          <AnimatedMenuToggle toggle={toggleSidebar} isOpen={isOpen} />
-        </div>
-
-        <div className="p-6">
-          <TextShimmer className='text-xl' duration={1}>
-            Waiting for other players to join the room...
-          </TextShimmer>
-        </div>
-
-      </div>
-
-    </div>
+   
   );
 };
 

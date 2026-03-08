@@ -60,8 +60,8 @@ export default function Home() {
           glitchSpeed={50}
           centerVignette={true}
           outerVignette={false}
-          smooth={true}
-        />
+          smooth={true} 
+         />
       </div>
 
       {/* Dark overlay for readability */}

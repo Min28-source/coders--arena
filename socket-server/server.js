@@ -52,6 +52,12 @@ io.on("connection", (socket) => {
   socket.on("get-players-data", (roomId) => {
     io.to(roomId).emit("players-update", rooms[roomId].players)
   })
+
+  //starting contest
+  socket.on("start-contest", (roomId) =>{
+    rooms[roomId].status = "progressing";
+    io.to(roomId).emit("contest-started");
+  })
 });
 
 server.listen(4000, () => {
