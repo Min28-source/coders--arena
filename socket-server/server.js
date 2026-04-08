@@ -27,6 +27,7 @@ io.on("connection", (socket) => {
 
     socket.join(roomId)
     socket.emit("room-created", roomId)
+    console.log("Room created")
 
     io.to(roomId).emit("players-update", rooms[roomId].players)
   })
@@ -48,15 +49,24 @@ io.on("connection", (socket) => {
     console.log(rooms[roomId].players)
   })
 
-  //player asking for other players in the room
+  //players in the room to display over sidebar
   socket.on("get-players-data", (roomId) => {
     io.to(roomId).emit("players-update", rooms[roomId].players)
   })
 
   //starting contest
-  socket.on("start-contest", (roomId) =>{
+  socket.on("start-contest", (roomId) => {
     rooms[roomId].status = "progressing";
     io.to(roomId).emit("contest-started");
+  })
+
+  //check if this roomId exists
+  socket.on("validate-roomId", (roomId) => {
+    if (rooms[roomId]) {
+      socket.emit("room-validation-result", { exists: true });
+    } else {
+      socket.emit("room-validation-result", { exists: false });
+    }
   })
 });
 
