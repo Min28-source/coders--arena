@@ -38,14 +38,12 @@ export default function Home() {
       socket.emit("join-room", name, roomId)
 
       socket.once("joined-room", () => {
-        localStorage.setItem("roomId", roomId)
         router.push(`/room/${roomId}`)
       })
     } else {
       socket.emit("create-room", name)
 
       socket.once("room-created", (joinedRoomId) => {
-        localStorage.setItem("roomId", joinedRoomId)
         router.push(`/room/${joinedRoomId}`)
       })
     }

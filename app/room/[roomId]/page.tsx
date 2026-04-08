@@ -9,8 +9,8 @@ import { Header } from "@/components/vercel-navbar";
 
 export default function Page() {
     const socket = useSocket();
-    const [started, setStarted] = useState<Boolean>(false)
-
+    const [started, setStarted] = useState<Boolean>(false);
+    
     useEffect(() => {
         socket.on("contest-started", () => {
             setStarted(true);
@@ -31,7 +31,7 @@ export default function Page() {
                 <Group className="p-6">
                     <Panel defaultSize="50%" className="rounded-lg bg-gray-200 p-4">I am the left panel</Panel>
                     <Separator className="p-1"/>
-                    <Panel className="rounded-lg bg-gray-200 p-4"><Editor height="90vh" defaultLanguage="java" defaultValue="// some comment" /></Panel>
+                    <Panel className="rounded-lg bg-gray-200 p-4"><Editor height="90vh" defaultLanguage="java" defaultValue="// your code here" /></Panel>
                 </Group>
             </div>
         </>
