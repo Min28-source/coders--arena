@@ -8,14 +8,13 @@ import { useSocket } from "@/contexts/socketContext";
 import { Button } from "@/components/ui/button"
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 const AnimatedMenuToggle = ({
   toggle,
@@ -145,29 +144,46 @@ const Sidebar = () => {
 
   const [players, setPlayers] = useState<Player[]>([])
   const [isOpen, setIsOpen] = useState(false);
+  const [isHost, setHost] = useState(false)
   const socket = useSocket();
   const params = useParams();
+  const router = useRouter();
 
   useEffect(() => {
-    const roomId = params.roomId
-    if (!roomId) return;
-    socket.emit("validate-roomId", roomId)
-    socket.once("room-validation-result", (data) => {
-      if (data.exists === true) {
-        socket.emit("get-players-data", roomId);
-      } else {
-        throw new Error("Room does not exist.")
-      }
-    })
+    const handlePlayersUpdate = (data: { players: Player[], host: string }) => {
+      console.log("Players updated.");
+      setPlayers(data.players);
+      if (data.host === socket.id) setHost(true);
+    };
 
-    socket.on("players-update", (players) => {
-      setPlayers(players)
-    })
+    socket.on("players-update", handlePlayersUpdate);
 
-    return () => {
-      socket.off("players-update");
-      socket.off("room-validation-result")
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      router.replace('/not-found');
     }
+
+    socket.emit("check-user", userId, (userData: { exists: boolean }) => {
+      if (!userData.exists) {
+        router.replace('/not-found');
+      }
+    });
+
+    const roomId = params.roomId
+
+    if (!roomId) return;
+    socket.emit("validate-roomId", roomId, (roomData: { exists: boolean }) => {
+      if (!roomData.exists) {
+        router.replace('/not-found')
+      } else {
+        socket.emit("register-user", userId, roomId);
+        socket.emit("get-players-data", roomId);
+      }
+    });
+
+    // return () => {
+    //   socket.off("players-update");
+    // }
   }, [params.roomId])
 
   const handleClick = () => {
@@ -286,9 +302,9 @@ const Sidebar = () => {
 
               <CardFooter className="flex flex-col gap-2">
                 <AddPlayersDialog />
-                <Button variant="outline" className="w-full" onClick={handleClick}>
+                {isHost && <Button variant="outline" className="w-full" onClick={handleClick}>
                   Start contest
-                </Button>
+                </Button>}
               </CardFooter>
             </Card>
           </div>

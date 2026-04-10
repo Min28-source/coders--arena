@@ -7,7 +7,7 @@ const SocketContext = createContext<Socket | null>(null);
 
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     const socket = getSocket();
-    if(socket === undefined){
+    if (socket === undefined) {
         throw new Error("Socket instance does not exist.")
     }
     useEffect(() => {
@@ -25,10 +25,10 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     )
 }
 
-export const useSocket = () =>{
+export const useSocket = () => {
     const context = useContext(SocketContext);
-    if(!context){
+    if (!context) {
         throw new Error("Context can be created only inside the provider")
     }
-    return context;
+    return context
 }

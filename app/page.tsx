@@ -35,14 +35,16 @@ export default function Home() {
     setError("")
 
     if (roomId) {
-      socket.emit("join-room", name, roomId)
-
+      localStorage.setItem("userId", crypto.randomUUID());
+      const userId = localStorage.getItem("userId")
+      socket.emit("join-room", name, roomId, userId);
       socket.once("joined-room", () => {
         router.push(`/room/${roomId}`)
       })
     } else {
-      socket.emit("create-room", name)
-
+      localStorage.setItem("userId", crypto.randomUUID());
+      const userId = localStorage.getItem("userId");
+      socket.emit("create-room", name, userId);
       socket.once("room-created", (joinedRoomId) => {
         router.push(`/room/${joinedRoomId}`)
       })
@@ -58,8 +60,8 @@ export default function Home() {
           glitchSpeed={50}
           centerVignette={true}
           outerVignette={false}
-          smooth={true} 
-         />
+          smooth={true}
+        />
       </div>
 
       {/* Dark overlay for readability */}
@@ -98,11 +100,10 @@ export default function Home() {
                   if (error) setError("")
                 }}
                 placeholder="Enter your name"
-                className={`bg-gray-900 text-white border ${
-                  error
-                    ? "border-red-500 focus-visible:ring-red-500"
-                    : "border-gray-600"
-                }`}
+                className={`bg-gray-900 text-white border ${error
+                  ? "border-red-500 focus-visible:ring-red-500"
+                  : "border-gray-600"
+                  }`}
               />
 
               {error && (
