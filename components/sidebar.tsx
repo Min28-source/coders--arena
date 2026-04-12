@@ -141,24 +141,23 @@ const Sidebar = () => {
     id: string
     name: string
   }
+  const [isOpen, setIsOpen] = useState(false);
 
   const [players, setPlayers] = useState<Player[]>([])
-  const [isOpen, setIsOpen] = useState(false);
   const [isHost, setHost] = useState(false)
   const socket = useSocket();
   const params = useParams();
   const router = useRouter();
-
+  
   useEffect(() => {
+    const userId = localStorage.getItem("userId");
     const handlePlayersUpdate = (data: { players: Player[], host: string }) => {
-      console.log("Players updated.");
       setPlayers(data.players);
-      if (data.host === socket.id) setHost(true);
+      if (data.host === userId) setHost(true);
     };
 
     socket.on("players-update", handlePlayersUpdate);
 
-    const userId = localStorage.getItem("userId");
     if (!userId) {
       router.replace('/not-found');
     }
@@ -176,15 +175,12 @@ const Sidebar = () => {
       if (!roomData.exists) {
         router.replace('/not-found')
       } else {
-        socket.emit("register-user", userId, roomId);
+        socket.emit("register-user", userId, roomId, localStorage.getItem('name'));
         socket.emit("get-players-data", roomId);
       }
     });
 
-    // return () => {
-    //   socket.off("players-update");
-    // }
-  }, [params.roomId])
+  }, [])
 
   const handleClick = () => {
     socket.emit("start-contest", params.roomId);

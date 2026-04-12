@@ -10,47 +10,57 @@ const io = new Server(server, {
   }
 });
 
+//storages
 let rooms = {}
-const map = new Map();
-function addToMap(key, value) {
-  if (!map.has(key)) {
-    map.set(key, []);
+const socketToUser = new Map();
+const userToRoom = new Map();
+const userToSockets = new Map();
+const disconnectTimers = new Map();
+
+function addToUserToSockets(key, value) {
+  if (!userToSockets.has(key)) {
+    userToSockets.set(key, []);
   }
-  map.get(key).push(value);
+  userToSockets.get(key).push(value);
 }
 
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
   //host creating room
-  socket.on("create-room", (name, userId) => {
-    addToMap(userId, socket.id);
+  socket.on("create-room", (name) => {
+    const userId = crypto.randomUUID();
+    addToUserToSockets(userId, socket.id);
     const roomId = crypto.randomBytes(8).toString("hex");
 
     rooms[roomId] = {
-      host: socket.id,
-      players: [{ id: socket.id, name: name }],
+      host: userId,
+      players: [{ id: userId, name: name }],
       status: "waiting"
     }
 
-    socket.join(roomId)
-    socket.emit("room-created", roomId)
-    console.log("Room created")
+    userToRoom.set(userId, roomId);
+    socketToUser.set(socket.id, userId);
+    socket.join(roomId);
+    socket.emit("room-created", roomId, userId);
   })
 
   //player joining room
-  socket.on("join-room", (name, roomId, userId) => {
+  socket.on("join-room", (name, roomId) => {
     if (!rooms[roomId]) {
       socket.emit("Room does not exist.");
       console.log("Room does not exist.")
       return;
     }
 
+    const userId = crypto.randomUUID();
     socket.join(roomId);
-    addToMap(userId, socket.id);
+    addToUserToSockets(userId, socket.id);
+    socketToUser.set(socket.id, userId);
+    userToRoom.set(userId, roomId);
 
-    rooms[roomId].players.push({ id: socket.id, name: name });
-    socket.emit("joined-room", roomId);
+    rooms[roomId].players.push({ id: userId, name: name });
+    socket.emit("joined-room", userId);
   })
 
   //players in the room to display over sidebar
@@ -69,17 +79,42 @@ io.on("connection", (socket) => {
   });
 
   //adding a new socket.id to the map if a user opens a new tab or something
-  socket.on("register-user", (userId, roomId) => {
-    const socketIdExists = rooms[roomId].players.some(obj => obj.id === socket.id);
-    if (!socketIdExists) {
-      socket.join(roomId)
-      addToMap(userId, socket.id);
+  socket.on("register-user", (userId, roomId, name) => {
+    if (disconnectTimers.has(userId)) {
+      clearTimeout(disconnectTimers.get(userId));
+      disconnectTimers.delete(userId);
     }
+
+    if (!socketToUser.get(socket.id)) {
+      socketToUser.set(socket.id, userId);
+    }
+
+    if (!userToSockets.has(userId)) {
+      userToSockets.set(userId, [])
+    }
+
+    userToSockets.get(userId).push(socket.id);
+
+    if (!userToRoom.has(userId)) {
+      userToRoom.set(userId, socket.id)
+    }
+
+    const room = rooms[roomId];
+    if (!room.players.find(p => p.id === userId)) {
+      room.players.push({ id: userId, name: name });
+    }
+
+    socket.join(roomId);
+
+    io.to(roomId).emit("players-update", {
+      players: rooms[roomId].players,
+      host: rooms[roomId].host
+    })
   })
 
   //check if this user exists
   socket.on("check-user", (userId, callback) => {
-    if (map.has(userId)) {
+    if (userToSockets.has(userId)) {
       callback({ exists: true })
     } else {
       callback({ exists: false })
@@ -93,6 +128,44 @@ io.on("connection", (socket) => {
     } else {
       callback({ exists: false })
     }
+  })
+
+  socket.on("disconnect", () => {
+    const userId = socketToUser.get(socket.id);
+    if (!userId) return;
+    console.log(`User disconnected ${socket.id}`)
+    socketToUser.delete(socket.id);
+
+    const sockets = userToSockets.get(userId);
+    if (!sockets) return;
+
+    const updated = sockets.filter(id => id !== socket.id);
+    if (updated.length === 0) {
+      const timer = setTimeout(() => {
+        userToSockets.delete(userId);
+        const room = rooms[userToRoom.get(userId)];
+        room.players = room.players.filter(player => player.id != userId);
+        if (userId === room.host) {
+          if (room.players.length > 0) {
+            room.host = room.players[0].id;
+          } else {
+            delete rooms[userToRoom.get(userId)];
+            return;
+          }
+        }
+        io.to(userToRoom.get(userId)).emit("players-update", {
+          players: room.players,
+          host: room.host
+        });
+      }, 3000);
+      disconnectTimers.set(userId, timer);
+    } else {
+      userToSockets.set(userId, updated);
+    }
+    // io.to(userToRoom.get(userId)).emit("players-update", {
+    //   players: rooms[userToRoom.get(userId)].players,
+    //   host: rooms[userToRoom.get(userId)].host
+    // });
   })
 });
 

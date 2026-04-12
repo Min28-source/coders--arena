@@ -35,18 +35,18 @@ export default function Home() {
     setError("")
 
     if (roomId) {
-      localStorage.setItem("userId", crypto.randomUUID());
-      const userId = localStorage.getItem("userId")
-      socket.emit("join-room", name, roomId, userId);
-      socket.once("joined-room", () => {
+      localStorage.setItem('name', name);
+      socket.emit("join-room", name, roomId);
+      socket.once("joined-room", (userId) => {
+        localStorage.setItem('userId', userId)
         router.push(`/room/${roomId}`)
       })
     } else {
-      localStorage.setItem("userId", crypto.randomUUID());
-      const userId = localStorage.getItem("userId");
-      socket.emit("create-room", name, userId);
-      socket.once("room-created", (joinedRoomId) => {
-        router.push(`/room/${joinedRoomId}`)
+      localStorage.setItem('name', name);
+      socket.emit("create-room", name);
+      socket.once("room-created", (roomId, userId) => {
+        localStorage.setItem('userId', userId);
+        router.push(`/room/${roomId}`)
       })
     }
   }
