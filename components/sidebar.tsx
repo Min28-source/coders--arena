@@ -6,6 +6,7 @@ import AddPlayersDialog from "./AddPlayersDialog"
 import { TextShimmer } from "./ui/text-shimmer";
 import { useSocket } from "@/contexts/socketContext";
 import { Button } from "@/components/ui/button"
+import { useRoomValidation } from "@/hooks/useRoomValidation";
 import {
   Card,
   CardContent,
@@ -147,40 +148,25 @@ const Sidebar = () => {
   const [isHost, setHost] = useState(false)
   const socket = useSocket();
   const params = useParams();
-  const router = useRouter();
-  
+  const { isLoading, isValid } = useRoomValidation();
+
   useEffect(() => {
+     if (isLoading || !isValid) return;
     const userId = localStorage.getItem("userId");
+    const roomId = params.roomId
     const handlePlayersUpdate = (data: { players: Player[], host: string }) => {
       setPlayers(data.players);
       if (data.host === userId) setHost(true);
     };
 
     socket.on("players-update", handlePlayersUpdate);
+    socket.emit("register-user", userId, roomId, localStorage.getItem('name'));
+    socket.emit("get-players-data", roomId);
+  }, [isLoading, isValid, socket, params.roomId])
 
-    if (!userId) {
-      router.replace('/not-found');
-    }
-
-    socket.emit("check-user", userId, (userData: { exists: boolean }) => {
-      if (!userData.exists) {
-        router.replace('/not-found');
-      }
-    });
-
-    const roomId = params.roomId
-
-    if (!roomId) return;
-    socket.emit("validate-roomId", roomId, (roomData: { exists: boolean }) => {
-      if (!roomData.exists) {
-        router.replace('/not-found')
-      } else {
-        socket.emit("register-user", userId, roomId, localStorage.getItem('name'));
-        socket.emit("get-players-data", roomId);
-      }
-    });
-
-  }, [])
+  if (isLoading) {
+    return <p>Loading...</p>
+  }
 
   const handleClick = () => {
     socket.emit("start-contest", params.roomId);

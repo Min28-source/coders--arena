@@ -100,6 +100,7 @@ io.on("connection", (socket) => {
     }
 
     const room = rooms[roomId];
+    
     if (!room.players.find(p => p.id === userId)) {
       room.players.push({ id: userId, name: name });
     }
@@ -162,10 +163,6 @@ io.on("connection", (socket) => {
     } else {
       userToSockets.set(userId, updated);
     }
-    // io.to(userToRoom.get(userId)).emit("players-update", {
-    //   players: rooms[userToRoom.get(userId)].players,
-    //   host: rooms[userToRoom.get(userId)].host
-    // });
   })
 });
 
