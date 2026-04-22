@@ -5,7 +5,6 @@ import { useSocket } from "@/contexts/socketContext";
 import { useEffect, useState } from "react";
 import Editor from "@monaco-editor/react";
 import { Group, Panel, Separator } from "react-resizable-panels";
-import { Header } from "@/components/vercel-navbar";
 
 export default function Page() {
     const socket = useSocket();
@@ -36,7 +35,25 @@ export default function Page() {
             {!started && <Sidebar />}
             {started && (
                 <div className="h-screen flex flex-col">
-                    <Header />
+                    <div className="h-12 flex items-center justify-between px-4 bg-gray-800 text-white border-b border-gray-700">
+                        <div className="text-2xl font-semibold">Code Arena</div>
+
+                        <div className="flex items-center gap-3">
+                            <button
+                                onClick={handleRun}
+                                className="px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-sm"
+                            >
+                                Run
+                            </button>
+
+                            <button
+                                onClick={handleSubmit}
+                                className="px-3 py-1 bg-green-600 hover:bg-green-700 rounded text-sm"
+                            >
+                                Submit
+                            </button>
+                        </div>
+                    </div>
 
                     <Group orientation="horizontal" className="flex-1">
 
