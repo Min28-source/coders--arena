@@ -1,5 +1,6 @@
 "use client";
 
+import { Problems } from "@/lib/generated/prisma/client";
 import { Sidebar } from "@/components/sidebar";
 import { useSocket } from "@/contexts/socketContext";
 import { useEffect, useState } from "react";
@@ -11,18 +12,28 @@ export default function Page() {
     const [started, setStarted] = useState(false);
     const [code, setCode] = useState("// your code here");
     const [output, setOutput] = useState("");
-    const [input, setInput] = useState("");
+    const [problem, setProblem] = useState<Problems | null>();
 
     useEffect(() => {
-        socket.on("contest-started", () => setStarted(true));
+        console.log(problem);
+    }, [problem])
+    useEffect(() => {
+        async function assignProblem() {
+            const res = await fetch("/api/problem")
+            const result = await res.json();
+            setProblem(result)
+        }
 
+        socket.on("contest-started", () => {
+            assignProblem();
+            setStarted(true);
+        });
         return () => {
             socket.off("contest-started");
         };
     }, [socket]);
 
     const handleRun = () => {
-        // simulate run
         setOutput("Running...\nSample Output");
     };
 
@@ -58,14 +69,14 @@ export default function Page() {
                     <Group orientation="horizontal" className="flex-1">
 
                         {/* LEFT: PROBLEM */}
-                        <Panel defaultSize={7000} minSize={300}>
+                        <Panel defaultSize={500} minSize={250}>
+                            
                             <div className="h-full overflow-y-auto p-4 bg-gray-50">
                                 <h2 className="text-xl font-semibold mb-2">
-                                    Two Sum
+                                    {problem?.title}
                                 </h2>
                                 <p className="text-sm text-gray-700 mb-4">
-                                    Given an array of integers nums and an integer target,
-                                    return indices of the two numbers such that they add up to target.
+                                   {problem?.description}
                                 </p>
 
                                 <div className="mb-4">
@@ -79,7 +90,7 @@ export default function Page() {
                                 <div>
                                     <h3 className="font-medium">Example</h3>
                                     <pre className="bg-gray-200 p-2 rounded text-sm">
-                                        {`Input: nums = [2,7,11,15], target = 9 Output: [0,1]`}
+                                        {"Input: nums = [2,7,11,15], target = 9 Output: [0,1]"}
                                     </pre>
                                 </div>
                             </div>
