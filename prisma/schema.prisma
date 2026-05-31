@@ -12,5 +12,5 @@ model Problems {
   title String
   description String
   constraints String[]
-  examples Json
+  examples String
 }

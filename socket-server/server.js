@@ -1,6 +1,13 @@
-const { Server } = require("socket.io");
-const http = require("http");
-const crypto = require("crypto");
+import { Server } from "socket.io";
+import http from "http";
+import crypto from "crypto";
+
+import path from "path"; 
+import dotenv from "dotenv";
+
+dotenv.config({ path: path.resolve(process.cwd(), "../.env") });
+
+import { prisma } from "../lib/prisma.js";
 
 const server = http.createServer();
 const io = new Server(server, {
@@ -73,9 +80,14 @@ io.on("connection", (socket) => {
   });
 
   //starting contest
-  socket.on("start-contest", (roomId) => {
+  socket.on("start-contest", async (roomId) => {
+    const count = await prisma.problems.count();
+    const randomNumber = Math.floor(Math.random() * count);
+    const problem = await prisma.problems.findFirst({
+      skip : randomNumber
+    })
     rooms[roomId].status = "progressing";
-    io.to(roomId).emit("contest-started");
+    io.to(roomId).emit("contest-started", problem);
   });
 
   //adding a new socket.id to the map if a user opens a new tab or something
@@ -100,7 +112,7 @@ io.on("connection", (socket) => {
     }
 
     const room = rooms[roomId];
-    
+
     if (!room.players.find(p => p.id === userId)) {
       room.players.push({ id: userId, name: name });
     }

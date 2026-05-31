@@ -1,6 +1,5 @@
 "use client";
 
-import { Problems } from "@/lib/generated/prisma/client";
 import { Sidebar } from "@/components/sidebar";
 import { useSocket } from "@/contexts/socketContext";
 import { useEffect, useState } from "react";
@@ -8,24 +7,21 @@ import Editor from "@monaco-editor/react";
 import { Group, Panel, Separator } from "react-resizable-panels";
 
 export default function Page() {
+    type Problems = {
+        title : String, 
+        description : String,
+        constraints : String[],
+        examples : String
+    }
     const socket = useSocket();
     const [started, setStarted] = useState(false);
     const [code, setCode] = useState("// your code here");
     const [output, setOutput] = useState("");
     const [problem, setProblem] = useState<Problems | null>();
-
+   
     useEffect(() => {
-        console.log(problem);
-    }, [problem])
-    useEffect(() => {
-        async function assignProblem() {
-            const res = await fetch("/api/problem")
-            const result = await res.json();
-            setProblem(result)
-        }
-
-        socket.on("contest-started", () => {
-            assignProblem();
+        socket.on("contest-started", (problem) => {
+            setProblem(problem)
             setStarted(true);
         });
         return () => {
@@ -67,35 +63,37 @@ export default function Page() {
                     </div>
 
                     <Group orientation="horizontal" className="flex-1">
-
                         {/* LEFT: PROBLEM */}
                         <Panel defaultSize={500} minSize={250}>
-                            
-                            <div className="h-full overflow-y-auto p-4 bg-gray-50">
-                                <h2 className="text-xl font-semibold mb-2">
-                                    {problem?.title}
-                                </h2>
-                                <p className="text-sm text-gray-700 mb-4">
-                                   {problem?.description}
-                                </p>
+                            {problem ? (
+                                <div className="h-full overflow-y-auto p-4 bg-gray-50">
+                                    <h2 className="text-xl font-semibold mb-2">
+                                        {problem.title}
+                                    </h2>
+                                    <p className="text-sm text-gray-700 mb-4">
+                                        {problem.description}
+                                    </p>
 
-                                <div className="mb-4">
-                                    <h3 className="font-medium">Constraints</h3>
-                                    <ul className="text-sm list-disc ml-5">
-                                        <li>2 ≤ nums.length ≤ 10⁴</li>
-                                        <li>-10⁹ ≤ nums[i] ≤ 10⁹</li>
-                                    </ul>
-                                </div>
+                                    <div className="mb-4">
+                                        <h3 className="font-medium">Constraints</h3>
+                                        <ul className="text-sm list-disc ml-5">
+                                            {problem.constraints?.map((prob) => (
+                                                <li>{prob}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
 
-                                <div>
-                                    <h3 className="font-medium">Example</h3>
-                                    <pre className="bg-gray-200 p-2 rounded text-sm">
-                                        {"Input: nums = [2,7,11,15], target = 9 Output: [0,1]"}
-                                    </pre>
+                                    <div>
+                                        <h3 className="font-medium">Example:</h3>
+                                        <div className="bg-gray-200 p-2 rounded text-sm break-words">
+                                           {problem.examples}
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            ) : (
+                                <p>Loading...</p>
+                            )}
                         </Panel>
-
                         <Separator className="w-2 bg-gray-500 hover:bg-gray-700 transition-colors cursor-col-resize" />
 
                         {/* RIGHT SIDE */}
@@ -112,7 +110,6 @@ export default function Page() {
                                         theme="vs-dark"
                                     />
                                 </Panel>
-
                                 <Separator className="h-2 bg-gray-500 hover:bg-gray-700" />
 
                                 {/* CONSOLE */}
