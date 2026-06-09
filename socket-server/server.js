@@ -2,12 +2,7 @@ import { Server } from "socket.io";
 import http from "http";
 import crypto from "crypto";
 
-import path from "path"; 
-import dotenv from "dotenv";
-
-dotenv.config({ path: path.resolve(process.cwd(), "../.env") });
-
-import { prisma } from "../lib/prisma.js";
+import { prisma } from "./prisma.js";
 
 const server = http.createServer();
 const io = new Server(server, {

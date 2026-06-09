@@ -13,4 +13,5 @@ model Problems {
   description String
   constraints String[]
   examples String
+  starterCode Json
 }

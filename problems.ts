@@ -9,7 +9,13 @@ export const problems = [
       "Only one valid answer exists.",
       "Optimize time complexity to O(n) using a hash map."
     ],
-    "examples": "Input: nums = [2, 7, 11, 15], target = 9. Output: [0, 1]. Explanation: Because nums[0] + nums[1] == 9, we return [0, 1]."
+    "examples": "Input: nums = [2, 7, 11, 15], target = 9. Output: [0, 1]. Explanation: Because nums[0] + nums[1] == 9, we return [0, 1].",
+    "starterCode": {
+      "java": "class Solution {\n    public int[] twoSum(int[] nums, int target) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def twoSum(self, nums: List[int], target: int) -> List[int]:\n        # Write your code here\n        pass",
+      "javascript": "function twoSum(nums, target) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    vector<int> twoSum(vector<int>& nums, int target) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Valid Parentheses",
@@ -18,7 +24,13 @@ export const problems = [
       "1 <= s.length <= 10^4",
       "s consists of parentheses only '()[]{}'."
     ],
-    "examples": "Input: s = \"()[]{}\". Output: true. Explanation: All opening brackets are closed properly by their corresponding matching brackets in the correct order."
+    "examples": "Input: s = \"()[]{}\". Output: true. Explanation: All opening brackets are closed properly by their corresponding matching brackets in the correct order.",
+    "starterCode": {
+      "java": "class Solution {\n    public boolean isValid(String s) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def isValid(self, s: str) -> bool:\n        # Write your code here\n        pass",
+      "javascript": "function isValid(s) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    bool isValid(string s) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Maximum Subarray",
@@ -28,7 +40,13 @@ export const problems = [
       "-10^4 <= nums[i] <= 10^4",
       "Optimize time complexity to O(n) using Kadane's Algorithm."
     ],
-    "examples": "Input: nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]. Output: 6. Explanation: The subarray [4, -1, 2, 1] has the largest sum 6."
+    "examples": "Input: nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]. Output: 6. Explanation: The subarray [4, -1, 2, 1] has the largest sum 6.",
+    "starterCode": {
+      "java": "class Solution {\n    public int maxSubArray(int[] nums) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def maxSubArray(self, nums: List[int]) -> int:\n        # Write your code here\n        pass",
+      "javascript": "function maxSubArray(nums) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    int maxSubArray(vector<int>& nums) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Binary Search",
@@ -39,7 +57,13 @@ export const problems = [
       "All the integers in nums are unique.",
       "nums is sorted in ascending order."
     ],
-    "examples": "Input: nums = [-1, 0, 3, 5, 9, 12], target = 9. Output: 4. Explanation: 9 exists in nums and its index is 4."
+    "examples": "Input: nums = [-1, 0, 3, 5, 9, 12], target = 9. Output: 4. Explanation: 9 exists in nums and its index is 4.",
+    "starterCode": {
+      "java": "class Solution {\n    public int search(int[] nums, int target) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def search(self, nums: List[int], target: int) -> int:\n        # Write your code here\n        pass",
+      "javascript": "function search(nums, target) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    int search(vector<int>& nums, int target) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Merge Sorted Arrays",
@@ -51,7 +75,13 @@ export const problems = [
       "1 <= m + n <= 200",
       "-10^9 <= nums1[i], nums2[j] <= 10^9"
     ],
-    "examples": "Input: nums1 = [1, 2, 3, 0, 0, 0], m = 3, nums2 = [2, 5, 6], n = 3. Output: [1, 2, 2, 3, 5, 6]. Explanation: The arrays we are merging are [1, 2, 3] and [2, 5, 6]. The result of the merge is [1, 2, 2, 3, 5, 6] with the underlined elements coming from nums1."
+    "examples": "Input: nums1 = [1, 2, 3, 0, 0, 0], m = 3, nums2 = [2, 5, 6], n = 3. Output: [1, 2, 2, 3, 5, 6]. Explanation: The arrays we are merging are [1, 2, 3] and [2, 5, 6]. The result of the merge is [1, 2, 2, 3, 5, 6] with the underlined elements coming from nums1.",
+    "starterCode": {
+      "java": "class Solution {\n    public void merge(int[] nums1, int m, int[] nums2, int n) {\n        // Modify nums1 in-place, do not return anything\n    }\n}",
+      "python": "class Solution:\n    def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:\n        # Modify nums1 in-place, do not return anything\n        pass",
+      "javascript": "function merge(nums1, m, nums2, n) {\n    // Modify nums1 in-place, do not return anything\n};",
+      "cpp": "class Solution {\npublic:\n    void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {\n        // Modify nums1 in-place, do not return anything\n    }\n};"
+    }
   },
   {
     "title": "Reverse String",
@@ -60,7 +90,13 @@ export const problems = [
       "1 <= s.length <= 10^5",
       "s[i] is a printable ascii character."
     ],
-    "examples": "Input: s = [\"h\", \"e\", \"l\", \"l\", \"o\"]. Output: [\"o\", \"l\", \"l\", \"e\", \"h\"]. Explanation: The characters are reversed in-place using two pointers."
+    "examples": "Input: s = [\"h\", \"e\", \"l\", \"l\", \"o\"]. Output: [\"o\", \"l\", \"l\", \"e\", \"h\"]. Explanation: The characters are reversed in-place using two pointers.",
+    "starterCode": {
+      "java": "class Solution {\n    public void reverseString(char[] s) {\n        // Modify s in-place, do not return anything\n    }\n}",
+      "python": "class Solution:\n    def reverseString(self, s: List[str]) -> None:\n        # Modify s in-place, do not return anything\n        pass",
+      "javascript": "function reverseString(s) {\n    // Modify s in-place, do not return anything\n};",
+      "cpp": "class Solution {\npublic:\n    void reverseString(vector<char>& s) {\n        // Modify s in-place, do not return anything\n    }\n};"
+    }
   },
   {
     "title": "Palindrome Number",
@@ -69,7 +105,13 @@ export const problems = [
       "-2^31 <= x <= 2^31 - 1",
       "Could you solve it without converting the integer to a string?"
     ],
-    "examples": "Input: x = 121. Output: true. Explanation: 121 reads as 121 from left to right and from right to left."
+    "examples": "Input: x = 121. Output: true. Explanation: 121 reads as 121 from left to right and from right to left.",
+    "starterCode": {
+      "java": "class Solution {\n    public boolean isPalindrome(int x) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def isPalindrome(self, x: int) -> bool:\n        # Write your code here\n        pass",
+      "javascript": "function isPalindrome(x) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    bool isPalindrome(int x) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Climbing Stairs",
@@ -77,7 +119,13 @@ export const problems = [
     "constraints": [
       "1 <= n <= 45"
     ],
-    "examples": "Input: n = 3. Output: 3. Explanation: There are three ways to climb to the top: 1. 1 step + 1 step + 1 step, 2. 1 step + 2 steps, 3. 2 steps + 1 step."
+    "examples": "Input: n = 3. Output: 3. Explanation: There are three ways to climb to the top: 1. 1 step + 1 step + 1 step, 2. 1 step + 2 steps, 3. 2 steps + 1 step.",
+    "starterCode": {
+      "java": "class Solution {\n    public int climbStairs(int n) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def climbStairs(self, n: int) -> int:\n        # Write your code here\n        pass",
+      "javascript": "function climbStairs(n) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    int climbStairs(int n) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Best Time to Buy Stock",
@@ -86,7 +134,13 @@ export const problems = [
       "1 <= prices.length <= 10^5",
       "0 <= prices[i] <= 10^4"
     ],
-    "examples": "Input: prices = [7, 1, 5, 3, 6, 4]. Output: 5. Explanation: Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6 - 1 = 5. Note that buying on day 2 and selling on day 1 is not allowed because you must buy before you sell."
+    "examples": "Input: prices = [7, 1, 5, 3, 6, 4]. Output: 5. Explanation: Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6 - 1 = 5. Note that buying on day 2 and selling on day 1 is not allowed because you must buy before you sell.",
+    "starterCode": {
+      "java": "class Solution {\n    public int maxProfit(int[] prices) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def maxProfit(self, prices: List[int]) -> int:\n        # Write your code here\n        pass",
+      "javascript": "function maxProfit(prices) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    int maxProfit(vector<int>& prices) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Contains Duplicate",
@@ -95,7 +149,13 @@ export const problems = [
       "1 <= nums.length <= 10^5",
       "-10^9 <= nums[i] <= 10^9"
     ],
-    "examples": "Input: nums = [1, 2, 3, 1]. Output: true. Explanation: The element 1 occurs at indices 0 and 3, which means it appears more than once."
+    "examples": "Input: nums = [1, 2, 3, 1]. Output: true. Explanation: The element 1 occurs at indices 0 and 3, which means it appears more than once.",
+    "starterCode": {
+      "java": "class Solution {\n    public boolean containsDuplicate(int[] nums) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def containsDuplicate(self, nums: List[int]) -> bool:\n        # Write your code here\n        pass",
+      "javascript": "function containsDuplicate(nums) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    bool containsDuplicate(vector<int>& nums) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Move Zeroes",
@@ -104,7 +164,13 @@ export const problems = [
       "1 <= nums.length <= 10^4",
       "-2^31 <= nums[i] <= 2^31 - 1"
     ],
-    "examples": "Input: nums = [0, 1, 0, 3, 12]. Output: [1, 3, 12, 0, 0]. Explanation: All zeroes are moved to the rightmost positions, while 1, 3, and 12 maintain their initial relative order."
+    "examples": "Input: nums = [0, 1, 0, 3, 12]. Output: [1, 3, 12, 0, 0]. Explanation: All zeroes are moved to the rightmost positions, while 1, 3, and 12 maintain their initial relative order.",
+    "starterCode": {
+      "java": "class Solution {\n    public void moveZeroes(int[] nums) {\n        // Modify nums in-place, do not return anything\n    }\n}",
+      "python": "class Solution:\n    def moveZeroes(self, nums: List[int]) -> None:\n        # Modify nums in-place, do not return anything\n        pass",
+      "javascript": "function moveZeroes(nums) {\n    // Modify nums in-place, do not return anything\n};",
+      "cpp": "class Solution {\npublic:\n    void moveZeroes(vector<int>& nums) {\n        // Modify nums in-place, do not return anything\n    }\n};"
+    }
   },
   {
     "title": "Product Except Self",
@@ -115,7 +181,13 @@ export const problems = [
       "The product of any prefix or suffix of nums is guaranteed to fit in a 32-bit integer.",
       "Follow up: Can you solve the problem in O(1) extra space complexity? (The output array does not count as extra space for space complexity analysis.)"
     ],
-    "examples": "Input: nums = [1, 2, 3, 4]. Output: [24, 12, 8, 6]. Explanation: answer[0] = 2*3*4 = 24, answer[1] = 1*3*4 = 12, answer[2] = 1*2*4 = 8, answer[3] = 1*2*3 = 6."
+    "examples": "Input: nums = [1, 2, 3, 4]. Output: [24, 12, 8, 6]. Explanation: answer[0] = 2*3*4 = 24, answer[1] = 1*3*4 = 12, answer[2] = 1*2*4 = 8, answer[3] = 1*2*3 = 6.",
+    "starterCode": {
+      "java": "class Solution {\n    public int[] productExceptSelf(int[] nums) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def productExceptSelf(self, nums: List[int]) -> List[int]:\n        # Write your code here\n        pass",
+      "javascript": "function productExceptSelf(nums) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    vector<int> productExceptSelf(vector<int>& nums) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Longest Common Prefix",
@@ -125,7 +197,13 @@ export const problems = [
       "0 <= strs[i].length <= 200",
       "strs[i] consists of only lowercase English letters."
     ],
-    "examples": "Input: strs = [\"flower\", \"flow\", \"flight\"]. Output: \"fl\". Explanation: The prefix 'fl' is shared by all three strings at the very beginning."
+    "examples": "Input: strs = [\"flower\", \"flow\", \"flight\"]. Output: \"fl\". Explanation: The prefix 'fl' is shared by all three strings at the very beginning.",
+    "starterCode": {
+      "java": "class Solution {\n    public String longestCommonPrefix(String[] strs) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def longestCommonPrefix(self, strs: List[str]) -> str:\n        # Write your code here\n        pass",
+      "javascript": "function longestCommonPrefix(strs) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    string longestCommonPrefix(vector<string>& strs) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Roman to Integer",
@@ -135,7 +213,13 @@ export const problems = [
       "s contains only the characters ('I', 'V', 'X', 'L', 'C', 'D', 'M').",
       "It is guaranteed that s is a valid roman numeral in the range [1, 3999]."
     ],
-    "examples": "Input: s = \"MCMXCIV\". Output: 1994. Explanation: M = 1000, CM = 900, XC = 90 and IV = 4."
+    "examples": "Input: s = \"MCMXCIV\". Output: 1994. Explanation: M = 1000, CM = 900, XC = 90 and IV = 4.",
+    "starterCode": {
+      "java": "class Solution {\n    public int romanToInt(String s) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def romanToInt(self, s: str) -> int:\n        # Write your code here\n        pass",
+      "javascript": "function romanToInt(s) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    int romanToInt(string s) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Valid Anagram",
@@ -144,7 +228,13 @@ export const problems = [
       "1 <= s.length, t.length <= 5 * 10^4",
       "s and t consist of lowercase English letters."
     ],
-    "examples": "Input: s = \"anagram\", t = \"nagaram\". Output: true. Explanation: Both strings contain exactly three 'a's, one 'g', one 'm', one 'n', and one 'r'."
+    "examples": "Input: s = \"anagram\", t = \"nagaram\". Output: true. Explanation: Both strings contain exactly three 'a's, one 'g', one 'm', one 'n', and one 'r'.",
+    "starterCode": {
+      "java": "class Solution {\n    public boolean isAnagram(String s, String t) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def isAnagram(self, s: str, t: str) -> bool:\n        # Write your code here\n        pass",
+      "javascript": "function isAnagram(s, t) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    bool isAnagram(string s, string t) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Flood Fill",
@@ -157,7 +247,13 @@ export const problems = [
       "0 <= sr < m",
       "0 <= sc < n"
     ],
-    "examples": "Input: image = [[1, 1, 1], [1, 1, 0], [1, 0, 1]], sr = 1, sc = 1, color = 2. Output: [[2, 2, 2], [2, 2, 0], [2, 0, 1]]. Explanation: From the center of the image with position (sr, sc) = (1, 1) (i.e., image[1][1]), all pixels connected by a path of the same color (color 1) are colored with the new color 2. Note the bottom right pixel is not colored 2 because it is not 4-directionally connected to the starting pixel."
+    "examples": "Input: image = [[1, 1, 1], [1, 1, 0], [1, 0, 1]], sr = 1, sc = 1, color = 2. Output: [[2, 2, 2], [2, 2, 0], [2, 0, 1]]. Explanation: From the center of the image with position (sr, sc) = (1, 1) (i.e., image[1][1]), all pixels connected by a path of the same color (color 1) are colored with the new color 2. Note the bottom right pixel is not colored 2 because it is not 4-directionally connected to the starting pixel.",
+    "starterCode": {
+      "java": "class Solution {\n    public int[][] floodFill(int[][] image, int sr, int sc, int color) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def floodFill(self, image: List[List[int]], sr: int, sc: int, color: int) -> List[List[int]]:\n        # Write your code here\n        pass",
+      "javascript": "function floodFill(image, sr, sc, color) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int color) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Number of Islands",
@@ -168,7 +264,13 @@ export const problems = [
       "1 <= m, n <= 300",
       "grid[i][j] is '0' or '1'."
     ],
-    "examples": "Input: grid = [[\"1\", \"1\", \"0\", \"0\", \"0\"], [[\"1\", \"1\", \"0\", \"0\", \"0\"], [\"0\", \"0\", \"1\", \"0\", \"0\"], [\"0\", \"0\", \"0\", \"1\", \"1\"]]. Output: 3. Explanation: There are three distinct islands formed by connected components of '1's."
+    "examples": "Input: grid = [[\"1\", \"1\", \"0\", \"0\", \"0\"], [[\"1\", \"1\", \"0\", \"0\", \"0\"], [\"0\", \"0\", \"1\", \"0\", \"0\"], [\"0\", \"0\", \"0\", \"1\", \"1\"]]. Output: 3. Explanation: There are three distinct islands formed by connected components of '1's.",
+    "starterCode": {
+      "java": "class Solution {\n    public int numIslands(char[][] grid) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def numIslands(self, grid: List[List[str]]) -> int:\n        # Write your code here\n        pass",
+      "javascript": "function numIslands(grid) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    int numIslands(vector<vector<char>>& grid) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Course Schedule",
@@ -180,7 +282,13 @@ export const problems = [
       "0 <= ai, bi < numCourses",
       "All the pairs prerequisites[i] are unique."
     ],
-    "examples": "Input: numCourses = 2, prerequisites = [[1, 0], [0, 1]]. Output: false. Explanation: There are a total of 2 courses to take. To take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. This forms a dependency loop, making it impossible."
+    "examples": "Input: numCourses = 2, prerequisites = [[1, 0], [0, 1]]. Output: false. Explanation: There are a total of 2 courses to take. To take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. This forms a dependency loop, making it impossible.",
+    "starterCode": {
+      "java": "class Solution {\n    public boolean canFinish(int numCourses, int[][] prerequisites) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:\n        # Write your code here\n        pass",
+      "javascript": "function canFinish(numCourses, prerequisites) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Invert Binary Tree",
@@ -189,7 +297,13 @@ export const problems = [
       "The number of nodes in the tree is in the range [0, 100].",
       "-100 <= Node.val <= 100"
     ],
-    "examples": "Input: root = [4, 2, 7, 1, 3, 6, 9]. Output: [4, 7, 2, 9, 6, 3, 1]. Explanation: The children of node 4 (2 and 7) are swapped to (7 and 2). Recursively, the children of 2 and 7 are also swapped."
+    "examples": "Input: root = [4, 2, 7, 1, 3, 6, 9]. Output: [4, 7, 2, 9, 6, 3, 1]. Explanation: The children of node 4 (2 and 7) are swapped to (7 and 2). Recursively, the children of 2 and 7 are also swapped.",
+    "starterCode": {
+      "java": "class Solution {\n    public TreeNode invertTree(TreeNode root) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:\n        # Write your code here\n        pass",
+      "javascript": "function invertTree(root) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    TreeNode* invertTree(TreeNode* root) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Maximum Depth of Tree",
@@ -198,7 +312,13 @@ export const problems = [
       "The number of nodes in the tree is in the range [0, 10^4].",
       "-100 <= Node.val <= 100"
     ],
-    "examples": "Input: root = [3, 9, 20, null, null, 15, 7]. Output: 3. Explanation: The longest path goes from 3 -> 20 -> 15 (or 7), which contains exactly 3 nodes."
+    "examples": "Input: root = [3, 9, 20, null, null, 15, 7]. Output: 3. Explanation: The longest path goes from 3 -> 20 -> 15 (or 7), which contains exactly 3 nodes.",
+    "starterCode": {
+      "java": "class Solution {\n    public int maxDepth(TreeNode root) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def maxDepth(self, root: Optional[TreeNode]) -> int:\n        # Write your code here\n        pass",
+      "javascript": "function maxDepth(root) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    int maxDepth(TreeNode* root) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Balanced Binary Tree",
@@ -207,7 +327,13 @@ export const problems = [
       "The number of nodes in the tree is in the range [0, 5000].",
       "-10^4 <= Node.val <= 10^4"
     ],
-    "examples": "Input: root = [3, 9, 20, null, null, 15, 7]. Output: true. Explanation: The root node has left height 1 and right height 2. The difference is 1, which is valid. All other nodes satisfy the condition."
+    "examples": "Input: root = [3, 9, 20, null, null, 15, 7]. Output: true. Explanation: The root node has left height 1 and right height 2. The difference is 1, which is valid. All other nodes satisfy the condition.",
+    "starterCode": {
+      "java": "class Solution {\n    public boolean isBalanced(TreeNode root) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def isBalanced(self, root: Optional[TreeNode]) -> bool:\n        # Write your code here\n        pass",
+      "javascript": "function isBalanced(root) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    bool isBalanced(TreeNode* root) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Level Order Traversal",
@@ -216,7 +342,13 @@ export const problems = [
       "The number of nodes in the tree is in the range [0, 2000].",
       "-100 <= Node.val <= 100"
     ],
-    "examples": "Input: root = [3, 9, 20, null, null, 15, 7]. Output: [[3], [9, 20], [15, 7]]. Explanation: Level 0 contains [3], Level 1 contains [9, 20], Level 2 contains [15, 7]."
+    "examples": "Input: root = [3, 9, 20, null, null, 15, 7]. Output: [[3], [9, 20], [15, 7]]. Explanation: Level 0 contains [3], Level 1 contains [9, 20], Level 2 contains [15, 7].",
+    "starterCode": {
+      "java": "class Solution {\n    public List<List<Integer>> levelOrder(TreeNode root) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:\n        # Write your code here\n        pass",
+      "javascript": "function levelOrder(root) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    vector<vector<int>> levelOrder(TreeNode* root) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Lowest Common Ancestor",
@@ -227,7 +359,13 @@ export const problems = [
       "All Node.val are unique.",
       "p and q will exist in the BST and p != q."
     ],
-    "examples": "Input: root = [6, 2, 8, 0, 4, 7, 9, null, null, 3, 5], p = 2, q = 8. Output: 6. Explanation: The LCA of nodes 2 and 8 is 6, as it is the root and splits the paths to 2 and 8."
+    "examples": "Input: root = [6, 2, 8, 0, 4, 7, 9, null, null, 3, 5], p = 2, q = 8. Output: 6. Explanation: The LCA of nodes 2 and 8 is 6, as it is the root and splits the paths to 2 and 8.",
+    "starterCode": {
+      "java": "class Solution {\n    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':\n        # Write your code here\n        pass",
+      "javascript": "function lowestCommonAncestor(root, p, q) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Kth Largest Element",
@@ -236,7 +374,13 @@ export const problems = [
       "1 <= k <= nums.length <= 10^5",
       "-10^4 <= nums[i] <= 10^4"
     ],
-    "examples": "Input: nums = [3, 2, 1, 5, 6, 4], k = 2. Output: 5. Explanation: The sorted array is [1, 2, 3, 4, 5, 6], and the 2nd largest element is 5."
+    "examples": "Input: nums = [3, 2, 1, 5, 6, 4], k = 2. Output: 5. Explanation: The sorted array is [1, 2, 3, 4, 5, 6], and the 2nd largest element is 5.",
+    "starterCode": {
+      "java": "class Solution {\n    public int findKthLargest(int[] nums, int k) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def findKthLargest(self, nums: List[int], k: int) -> int:\n        # Write your code here\n        pass",
+      "javascript": "function findKthLargest(nums, k) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    int findKthLargest(vector<int>& nums, int k) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Top K Frequent Elements",
@@ -246,7 +390,13 @@ export const problems = [
       "1 <= k <= number of unique elements",
       "It is guaranteed that the answer is unique."
     ],
-    "examples": "Input: nums = [1, 1, 1, 2, 2, 3], k = 2. Output: [1, 2]. Explanation: 1 occurs 3 times, 2 occurs 2 times, and 3 occurs 1 time. The two most frequent elements are 1 and 2."
+    "examples": "Input: nums = [1, 1, 1, 2, 2, 3], k = 2. Output: [1, 2]. Explanation: 1 occurs 3 times, 2 occurs 2 times, and 3 occurs 1 time. The two most frequent elements are 1 and 2.",
+    "starterCode": {
+      "java": "class Solution {\n    public int[] topKFrequent(int[] nums, int k) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def topKFrequent(self, nums: List[int], k: int) -> List[int]:\n        # Write your code here\n        pass",
+      "javascript": "function topKFrequent(nums, k) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    vector<int> topKFrequent(vector<int>& nums, int k) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Merge Intervals",
@@ -256,7 +406,13 @@ export const problems = [
       "intervals[i].length == 2",
       "0 <= starti <= endi <= 10^4"
     ],
-    "examples": "Input: intervals = [[1, 3], [2, 6], [8, 10], [15, 18]]. Output: [[1, 6], [8, 10], [15, 18]]. Explanation: Since intervals [1, 3] and [2, 6] overlap, merge them into [1, 6]."
+    "examples": "Input: intervals = [[1, 3], [2, 6], [8, 10], [15, 18]]. Output: [[1, 6], [8, 10], [15, 18]]. Explanation: Since intervals [1, 3] and [2, 6] overlap, merge them into [1, 6].",
+    "starterCode": {
+      "java": "class Solution {\n    public int[][] merge(int[][] intervals) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def merge(self, intervals: List[List[int]]) -> List[List[int]]:\n        # Write your code here\n        pass",
+      "javascript": "function merge(intervals) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    vector<vector<int>> merge(vector<vector<int>>& intervals) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Insert Interval",
@@ -269,7 +425,13 @@ export const problems = [
       "newInterval.length == 2",
       "0 <= start <= end <= 10^5"
     ],
-    "examples": "Input: intervals = [[1, 3], [6, 9]], newInterval = [2, 5]. Output: [[1, 5], [6, 9]]. Explanation: The new interval [2, 5] overlaps with [1, 3], so they are merged into [1, 5]."
+    "examples": "Input: intervals = [[1, 3], [6, 9]], newInterval = [2, 5]. Output: [[1, 5], [6, 9]]. Explanation: The new interval [2, 5] overlaps with [1, 3], so they are merged into [1, 5].",
+    "starterCode": {
+      "java": "class Solution {\n    public int[][] insert(int[][] intervals, int[] newInterval) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def insert(self, intervals: List[List[int]], newInterval: List[int]) -> List[List[int]]:\n        # Write your code here\n        pass",
+      "javascript": "function insert(intervals, newInterval) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Meeting Rooms",
@@ -279,7 +441,13 @@ export const problems = [
       "intervals[i].length == 2",
       "0 <= starti <= endi <= 10^6"
     ],
-    "examples": "Input: intervals = [[0, 30], [5, 10], [15, 20]]. Output: false. Explanation: The meeting from 0 to 30 overlaps with both 5-10 and 15-20, so a person cannot attend all of them."
+    "examples": "Input: intervals = [[0, 30], [5, 10], [15, 20]]. Output: false. Explanation: The meeting from 0 to 30 overlaps with both 5-10 and 15-20, so a person cannot attend all of them.",
+    "starterCode": {
+      "java": "class Solution {\n    public boolean canAttendMeetings(int[][] intervals) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def canAttendMeetings(self, intervals: List[List[int]]) -> bool:\n        # Write your code here\n        pass",
+      "javascript": "function canAttendMeetings(intervals) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    bool canAttendMeetings(vector<vector<int>>& intervals) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Coin Change",
@@ -289,7 +457,13 @@ export const problems = [
       "1 <= coins[i] <= 2^31 - 1",
       "0 <= amount <= 10^4"
     ],
-    "examples": "Input: coins = [1, 2, 5], amount = 11. Output: 3. Explanation: 11 can be formed by 5 + 5 + 1, which requires 3 coins."
+    "examples": "Input: coins = [1, 2, 5], amount = 11. Output: 3. Explanation: 11 can be formed by 5 + 5 + 1, which requires 3 coins.",
+    "starterCode": {
+      "java": "class Solution {\n    public int coinChange(int[] coins, int amount) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def coinChange(self, coins: List[int], amount: int) -> int:\n        # Write your code here\n        pass",
+      "javascript": "function coinChange(coins, amount) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    int coinChange(vector<int>& coins, int amount) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "House Robber",
@@ -298,7 +472,13 @@ export const problems = [
       "1 <= nums.length <= 100",
       "0 <= nums[i] <= 400"
     ],
-    "examples": "Input: nums = [1, 2, 3, 1]. Output: 4. Explanation: Rob house 1 (money = 1) and then rob house 3 (money = 3). Total amount you can rob = 1 + 3 = 4."
+    "examples": "Input: nums = [1, 2, 3, 1]. Output: 4. Explanation: Rob house 1 (money = 1) and then rob house 3 (money = 3). Total amount you can rob = 1 + 3 = 4.",
+    "starterCode": {
+      "java": "class Solution {\n    public int rob(int[] nums) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def rob(self, nums: List[int]) -> int:\n        # Write your code here\n        pass",
+      "javascript": "function rob(nums) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    int rob(vector<int>& nums) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Longest Increasing Subsequence",
@@ -307,7 +487,13 @@ export const problems = [
       "1 <= nums.length <= 2500",
       "-10^4 <= nums[i] <= 10^4"
     ],
-    "examples": "Input: nums = [10, 9, 2, 5, 3, 7, 101, 18]. Output: 4. Explanation: The longest increasing subsequence is [2, 3, 7, 101], therefore the length is 4."
+    "examples": "Input: nums = [10, 9, 2, 5, 3, 7, 101, 18]. Output: 4. Explanation: The longest increasing subsequence is [2, 3, 7, 101], therefore the length is 4.",
+    "starterCode": {
+      "java": "class Solution {\n    public int lengthOfLIS(int[] nums) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def lengthOfLIS(self, nums: List[int]) -> int:\n        # Write your code here\n        pass",
+      "javascript": "function lengthOfLIS(nums) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    int lengthOfLIS(vector<int>& nums) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Unique Paths",
@@ -315,7 +501,13 @@ export const problems = [
     "constraints": [
       "1 <= m, n <= 100"
     ],
-    "examples": "Input: m = 3, n = 7. Output: 28. Explanation: From top-left to bottom-right, there are 28 distinct valid paths traveling only down or right."
+    "examples": "Input: m = 3, n = 7. Output: 28. Explanation: From top-left to bottom-right, there are 28 distinct valid paths traveling only down or right.",
+    "starterCode": {
+      "java": "class Solution {\n    public int uniquePaths(int m, int n) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def uniquePaths(self, m: int, n: int) -> int:\n        # Write your code here\n        pass",
+      "javascript": "function uniquePaths(m, n) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    int uniquePaths(int m, int n) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Jump Game",
@@ -324,7 +516,13 @@ export const problems = [
       "1 <= nums.length <= 10^4",
       "0 <= nums[i] <= 10^5"
     ],
-    "examples": "Input: nums = [2, 3, 1, 1, 4]. Output: true. Explanation: Jump 1 step from index 0 to 1, then 3 steps to the last index."
+    "examples": "Input: nums = [2, 3, 1, 1, 4]. Output: true. Explanation: Jump 1 step from index 0 to 1, then 3 steps to the last index.",
+    "starterCode": {
+      "java": "class Solution {\n    public boolean canJump(int[] nums) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def canJump(self, nums: List[int]) -> bool:\n        # Write your code here\n        pass",
+      "javascript": "function canJump(nums) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    bool canJump(vector<int>& nums) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Word Search",
@@ -336,7 +534,13 @@ export const problems = [
       "1 <= word.length <= 15",
       "board and word consist of only lowercase and uppercase English letters."
     ],
-    "examples": "Input: board = [[\"A\", \"B\", \"C\", \"E\"], [\"S\", \"F\", \"C\", \"S\"], [\"A\", \"D\", \"E\", \"E\"]], word = \"ABCCED\". Output: true. Explanation: The path 'A' -> 'B' -> 'C' -> 'C' -> 'E' -> 'D' exists sequentially in the matrix grid."
+    "examples": "Input: board = [[\"A\", \"B\", \"C\", \"E\"], [\"S\", \"F\", \"C\", \"S\"], [\"A\", \"D\", \"E\", \"E\"]], word = \"ABCCED\". Output: true. Explanation: The path 'A' -> 'B' -> 'C' -> 'C' -> 'E' -> 'D' exists sequentially in the matrix grid.",
+    "starterCode": {
+      "java": "class Solution {\n    public boolean exist(char[][] board, String word) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def exist(self, board: List[List[str]], word: str) -> bool:\n        # Write your code here\n        pass",
+      "javascript": "function exist(board, word) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    bool exist(vector<vector<char>>& board, string word) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Generate Parentheses",
@@ -344,7 +548,13 @@ export const problems = [
     "constraints": [
       "1 <= n <= 8"
     ],
-    "examples": "Input: n = 3. Output: [\"((()))\", \"(()())\", \"(())()\", \"()(())\", \"()()()\"]. Explanation: These are all the 5 possible well-formed brackets combinations with 3 pairs."
+    "examples": "Input: n = 3. Output: [\"((()))\", \"(()())\", \"(())()\", \"()(())\", \"()()()\"]. Explanation: These are all the 5 possible well-formed brackets combinations with 3 pairs.",
+    "starterCode": {
+      "java": "class Solution {\n    public List<String> generateParenthesis(int n) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def generateParenthesis(self, n: int) -> List[str]:\n        # Write your code here\n        pass",
+      "javascript": "function generateParenthesis(n) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    vector<string> generateParenthesis(int n) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Permutations",
@@ -354,7 +564,13 @@ export const problems = [
       "-10 <= nums[i] <= 10",
       "All the integers of nums are unique."
     ],
-    "examples": "Input: nums = [1, 2, 3]. Output: [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]. Explanation: All 6 unique orderings for the numbers 1, 2, and 3 are listed."
+    "examples": "Input: nums = [1, 2, 3]. Output: [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]. Explanation: All 6 unique orderings for the numbers 1, 2, and 3 are listed.",
+    "starterCode": {
+      "java": "class Solution {\n    public List<List<Integer>> permute(int[] nums) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def permute(self, nums: List[int]) -> List[List[int]]:\n        # Write your code here\n        pass",
+      "javascript": "function permute(nums) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    vector<vector<int>> permute(vector<int>& nums) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Combination Sum",
@@ -365,7 +581,13 @@ export const problems = [
       "All elements of candidates are distinct.",
       "1 <= target <= 40"
     ],
-    "examples": "Input: candidates = [2, 3, 6, 7], target = 7. Output: [[2, 2, 3], [7]]. Explanation: 2 and 3 are candidates, and 2+2+3 = 7. Note that 2 can be used multiple times. 7 is also a candidate, which sums to 7. These are the only two combinations."
+    "examples": "Input: candidates = [2, 3, 6, 7], target = 7. Output: [[2, 2, 3], [7]]. Explanation: 2 and 3 are candidates, and 2+2+3 = 7. Note that 2 can be used multiple times. 7 is also a candidate, which sums to 7. These are the only two combinations.",
+    "starterCode": {
+      "java": "class Solution {\n    public List<List<Integer>> combinationSum(int[] candidates, int target) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:\n        # Write your code here\n        pass",
+      "javascript": "function combinationSum(candidates, target) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "N Queens",
@@ -373,7 +595,13 @@ export const problems = [
     "constraints": [
       "1 <= n <= 9"
     ],
-    "examples": "Input: n = 4. Output: [[\".Q..\", \"...Q\", \"Q...\", \"..Q.\"], [\"..Q.\", \"Q...\", \"...Q\", \".Q..\"]]. Explanation: There are two distinct solutions for a 4x4 chessboard layout where no two queens attack each other."
+    "examples": "Input: n = 4. Output: [[\".Q..\", \"...Q\", \"Q...\", \"..Q.\"], [\"..Q.\", \"Q...\", \"...Q\", \".Q..\"]]. Explanation: There are two distinct solutions for a 4x4 chessboard layout where no two queens attack each other.",
+    "starterCode": {
+      "java": "class Solution {\n    public List<List<String>> solveNQueens(int n) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def solveNQueens(self, n: int) -> List[List[str]]:\n        # Write your code here\n        pass",
+      "javascript": "function solveNQueens(n) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    vector<vector<string>> solveNQueens(int n) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Search 2D Matrix",
@@ -384,7 +612,13 @@ export const problems = [
       "1 <= m, n <= 100",
       "-10^4 <= matrix[i][j], target <= 10^4"
     ],
-    "examples": "Input: matrix = [[1, 3, 5, 7], [10, 11, 16, 20], [23, 30, 34, 60]], target = 3. Output: true. Explanation: 3 is located inside the first row of the matrix, so we return true."
+    "examples": "Input: matrix = [[1, 3, 5, 7], [10, 11, 16, 20], [23, 30, 34, 60]], target = 3. Output: true. Explanation: 3 is located inside the first row of the matrix, so we return true.",
+    "starterCode": {
+      "java": "class Solution {\n    public boolean searchMatrix(int[][] matrix, int target) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:\n        # Write your code here\n        pass",
+      "javascript": "function searchMatrix(matrix, target) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    bool searchMatrix(vector<vector<int>>& matrix, int target) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Find Peak Element",
@@ -394,7 +628,13 @@ export const problems = [
       "-2^31 <= nums[i] <= 2^31 - 1",
       "nums[i] != nums[i + 1] for all valid i."
     ],
-    "examples": "Input: nums = [1, 2, 3, 1]. Output: 2. Explanation: 3 is a peak element and its index is 2."
+    "examples": "Input: nums = [1, 2, 3, 1]. Output: 2. Explanation: 3 is a peak element and its index is 2.",
+    "starterCode": {
+      "java": "class Solution {\n    public int findPeakElement(int[] nums) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def findPeakElement(self, nums: List[int]) -> int:\n        # Write your code here\n        pass",
+      "javascript": "function findPeakElement(nums) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    int findPeakElement(vector<int>& nums) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Rotated Sorted Array Search",
@@ -405,7 +645,13 @@ export const problems = [
       "All values of nums are unique.",
       "nums is an ascending array that has been rotated."
     ],
-    "examples": "Input: nums = [4, 5, 6, 7, 0, 1, 2], target = 0. Output: 4. Explanation: 0 is located at index 4 in the rotated array."
+    "examples": "Input: nums = [4, 5, 6, 7, 0, 1, 2], target = 0. Output: 4. Explanation: 0 is located at index 4 in the rotated array.",
+    "starterCode": {
+      "java": "class Solution {\n    public int search(int[] nums, int target) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def search(self, nums: List[int], target: int) -> int:\n        # Write your code here\n        pass",
+      "javascript": "function search(nums, target) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    int search(vector<int>& nums, int target) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Min Stack",
@@ -415,7 +661,13 @@ export const problems = [
       "Methods pop, top and getMin will always be called on non-empty stacks.",
       "At most 3 * 10^4 calls will be made to push, pop, top, and getMin."
     ],
-    "examples": "Input: operations = [\"MinStack\", \"push\", \"push\", \"push\", \"getMin\", \"pop\", \"top\", \"getMin\"], values = [[], [-2], [0], [-3], [], [], [], []]. Output: [null, null, null, null, -3, null, 0, -2]. Explanation: MinStack minStack = new MinStack(); minStack.push(-2); minStack.push(0); minStack.push(-3); minStack.getMin(); // return -3 minStack.pop(); minStack.top(); // return 0 minStack.getMin(); // return -2"
+    "examples": "Input: operations = [\"MinStack\", \"push\", \"push\", \"push\", \"getMin\", \"pop\", \"top\", \"getMin\"], values = [[], [-2], [0], [-3], [], [], [], []]. Output: [null, null, null, null, -3, null, 0, -2]. Explanation: MinStack minStack = new MinStack(); minStack.push(-2); minStack.push(0); minStack.push(-3); minStack.getMin(); // return -3 minStack.pop(); minStack.top(); // return 0 minStack.getMin(); // return -2",
+    "starterCode": {
+      "java": "class MinStack {\n    public MinStack() {\n        // Initialize your data structure here\n    }\n    \n    public void push(int val) {\n        // Write your code here\n    }\n    \n    public void pop() {\n        // Write your code here\n    }\n    \n    public int top() {\n        // Write your code here\n    }\n    \n    public int getMin() {\n        // Write your code here\n    }\n}",
+      "python": "class MinStack:\n    def __init__(self):\n        # Initialize your data structure here\n        pass\n\n    def push(self, val: int) -> None:\n        # Write your code here\n        pass\n\n    def pop(self) -> None:\n        # Write your code here\n        pass\n\n    def top(self) -> int:\n        # Write your code here\n        pass\n\n    def getMin(self) -> int:\n        # Write your code here\n        pass",
+      "javascript": "class MinStack {\n    constructor() {\n        // Initialize your data structure here\n    }\n\n    push(val) {\n        // Write your code here\n    }\n\n    pop() {\n        // Write your code here\n    }\n\n    top() {\n        // Write your code here\n    }\n\n    getMin() {\n        // Write your code here\n    }\n};",
+      "cpp": "class MinStack {\npublic:\n    MinStack() {\n        // Initialize your data structure here\n    }\n    \n    void push(int val) {\n        // Write your code here\n    }\n    \n    void pop() {\n        // Write your code here\n    }\n    \n    int top() {\n        // Write your code here\n    }\n    \n    int getMin() {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Daily Temperatures",
@@ -424,7 +676,13 @@ export const problems = [
       "1 <= temperatures.length <= 10^5",
       "30 <= temperatures[i] <= 100"
     ],
-    "examples": "Input: temperatures = [73, 74, 75, 71, 69, 72, 76, 73]. Output: [1, 1, 4, 2, 1, 1, 0, 0]. Explanation: For day 1 (73), the next warmer day is day 2 (74), so answer[0] = 1. For day 3 (75), the next warmer day is day 7 (76), which is 4 days later."
+    "examples": "Input: temperatures = [73, 74, 75, 71, 69, 72, 76, 73]. Output: [1, 1, 4, 2, 1, 1, 0, 0]. Explanation: For day 1 (73), the next warmer day is day 2 (74), so answer[0] = 1. For day 3 (75), the next warmer day is day 7 (76), which is 4 days later.",
+    "starterCode": {
+      "java": "class Solution {\n    public int[] dailyTemperatures(int[] temperatures) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def dailyTemperatures(self, temperatures: List[int]) -> List[int]:\n        # Write your code here\n        pass",
+      "javascript": "function dailyTemperatures(temperatures) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    vector<int> dailyTemperatures(vector<int>& temperatures) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Evaluate RPN",
@@ -433,7 +691,13 @@ export const problems = [
       "1 <= tokens.length <= 10^4",
       "tokens[i] is either an operator or an integer in the range [-200, 200]."
     ],
-    "examples": "Input: tokens = [\"2\", \"1\", \"+\", \"3\", \"*\"]. Output: 9. Explanation: ((2 + 1) * 3) = 9"
+    "examples": "Input: tokens = [\"2\", \"1\", \"+\", \"3\", \"*\"]. Output: 9. Explanation: ((2 + 1) * 3) = 9",
+    "starterCode": {
+      "java": "class Solution {\n    public int evalRPN(String[] tokens) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def evalRPN(self, tokens: List[str]) -> int:\n        # Write your code here\n        pass",
+      "javascript": "function evalRPN(tokens) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    int evalRPN(vector<string>& tokens) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Implement Queue Using Stacks",
@@ -443,7 +707,13 @@ export const problems = [
       "At most 100 calls will be made to push, pop, peek, and empty.",
       "All the calls to pop and peek are valid."
     ],
-    "examples": "Input: operations = [\"MyQueue\", \"push\", \"push\", \"peek\", \"pop\", \"empty\"], values = [[], [1], [2], [], [], []]. Output: [null, null, null, 1, 1, false]. Explanation: MyQueue myQueue = new MyQueue(); myQueue.push(1); myQueue.push(2); myQueue.peek(); // return 1 myQueue.pop(); // return 1 myQueue.empty(); // return false"
+    "examples": "Input: operations = [\"MyQueue\", \"push\", \"push\", \"peek\", \"pop\", \"empty\"], values = [[], [1], [2], [], [], []]. Output: [null, null, null, 1, 1, false]. Explanation: MyQueue myQueue = new MyQueue(); myQueue.push(1); myQueue.push(2); myQueue.peek(); // return 1 myQueue.pop(); // return 1 myQueue.empty(); // return false",
+    "starterCode": {
+      "java": "class MyQueue {\n    public MyQueue() {\n        // Initialize your two stacks here\n    }\n    \n    public void push(int x) {\n        // Write your code here\n    }\n    \n    public int pop() {\n        // Write your code here\n    }\n    \n    public int peek() {\n        // Write your code here\n    }\n    \n    public boolean empty() {\n        // Write your code here\n    }\n}",
+      "python": "class MyQueue:\n    def __init__(self):\n        // Initialize your two stacks here\n        pass\n\n    def push(self, x: int) -> None:\n        # Write your code here\n        pass\n\n    def pop(self) -> int:\n        # Write your code here\n        pass\n\n    def peek(self) -> int:\n        # Write your code here\n        pass\n\n    def empty(self) -> bool:\n        # Write your code here\n        pass",
+      "javascript": "class MyQueue {\n    constructor() {\n        // Initialize your two stacks here\n    }\n\n    push(x) {\n        // Write your code here\n    }\n\n    pop() {\n        // Write your code here\n    }\n\n    peek() {\n        // Write your code here\n    }\n\n    empty() {\n        // Write your code here\n    }\n};",
+      "cpp": "class MyQueue {\npublic:\n    MyQueue() {\n        // Initialize your two stacks here\n    }\n    \n    void push(int x) {\n        // Write your code here\n    }\n    \n    int pop() {\n        // Write your code here\n    }\n    \n    int peek() {\n        // Write your code here\n    }\n    \n    bool empty() {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "LRU Cache",
@@ -454,7 +724,13 @@ export const problems = [
       "0 <= value <= 10^5",
       "At most 2 * 10^5 calls will be made to get and put."
     ],
-    "examples": "Input: operations = [\"LRUCache\", \"put\", \"put\", \"get\", \"put\", \"get\", \"put\", \"get\", \"get\", \"get\"], values = [[2], [1, 1], [2, 2], [1], [3, 3], [2], [4, 4], [1], [3], [4]]. Output: [null, null, null, 1, null, -1, null, -1, 3, 4]. Explanation: LRUCache lRUCache = new LRUCache(2); lRUCache.put(1, 1); lRUCache.put(2, 2); lRUCache.get(1); // returns 1 lRUCache.put(3, 3); // evicts key 2 lRUCache.get(2); // returns -1 (not found)"
+    "examples": "Input: operations = [\"LRUCache\", \"put\", \"put\", \"get\", \"put\", \"get\", \"put\", \"get\", \"get\", \"get\"], values = [[2], [1, 1], [2, 2], [1], [3, 3], [2], [4, 4], [1], [3], [4]]. Output: [null, null, null, 1, null, -1, null, -1, 3, 4]. Explanation: LRUCache lRUCache = new LRUCache(2); lRUCache.put(1, 1); lRUCache.put(2, 2); lRUCache.get(1); // returns 1 lRUCache.put(3, 3); // evicts key 2 lRUCache.get(2); // returns -1 (not found)",
+    "starterCode": {
+      "java": "class LRUCache {\n    public LRUCache(int capacity) {\n        // Initialize cache and tracking structure\n    }\n    \n    public int get(int key) {\n        // Write your code here\n    }\n    \n    public void put(int key, int value) {\n        // Write your code here\n    }\n}",
+      "python": "class LRUCache:\n    def __init__(self, capacity: int):\n        # Initialize cache and tracking structure\n        pass\n\n    def get(self, key: int) -> int:\n        # Write your code here\n        pass\n\n    def put(self, key: int, value: int) -> None:\n        # Write your code here\n        pass",
+      "javascript": "class LRUCache {\n    constructor(capacity) {\n        // Initialize cache and tracking structure\n    }\n\n    get(key) {\n        // Write your code here\n    }\n\n    put(key, value) {\n        // Write your code here\n    }\n};",
+      "cpp": "class LRUCache {\npublic:\n    LRUCache(int capacity) {\n        // Initialize cache and tracking structure\n    }\n    \n    int get(int key) {\n        // Write your code here\n    }\n    \n    void put(int key, int value) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Trie Implementation",
@@ -464,7 +740,13 @@ export const problems = [
       "word and prefix consist only of lowercase English letters.",
       "At most 3 * 10^4 calls in total will be made to insert, search, and startsWith."
     ],
-    "examples": "Input: operations = [\"Trie\", \"insert\", \"search\", \"startsWith\"], values = [[], [\"apple\"], [\"apple\"], [\"app\"]]. Output: [null, null, true, true]. Explanation: Trie trie = new Trie(); trie.insert('apple'); trie.search('apple'); // returns true trie.startsWith('app'); // returns true"
+    "examples": "Input: operations = [\"Trie\", \"insert\", \"search\", \"startsWith\"], values = [[], [\"apple\"], [\"apple\"], [\"app\"]]. Output: [null, null, true, true]. Explanation: Trie trie = new Trie(); trie.insert('apple'); trie.search('apple'); // returns true trie.startsWith('app'); // returns true",
+    "starterCode": {
+      "java": "class Trie {\n    public Trie() {\n        // Initialize your trie nodes here\n    }\n    \n    public void insert(String word) {\n        // Write your code here\n    }\n    \n    public boolean search(String word) {\n        // Write your code here\n    }\n    \n    public boolean startsWith(String prefix) {\n        // Write your code here\n    }\n}",
+      "python": "class Trie:\n    def __init__(self):\n        # Initialize your trie nodes here\n        pass\n\n    def insert(self, word: str) -> None:\n        # Write your code here\n        pass\n\n    def search(self, word: str) -> bool:\n        # Write your code here\n        pass\n\n    def startsWith(self, prefix: str) -> bool:\n        # Write your code here\n        pass",
+      "javascript": "class Trie {\n    constructor() {\n        // Initialize your trie nodes here\n    }\n\n    insert(word) {\n        // Write your code here\n    }\n\n    search(word) {\n        // Write your code here\n    }\n\n    startsWith(prefix) {\n        // Write your code here\n    }\n};",
+      "cpp": "class Trie {\npublic:\n    Trie() {\n        // Initialize your trie nodes here\n    }\n    \n    void insert(string word) {\n        // Write your code here\n    }\n    \n    bool search(string word) {\n        // Write your code here\n    }\n    \n    bool startsWith(string prefix) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Word Ladder",
@@ -478,7 +760,13 @@ export const problems = [
       "beginWord != endWord",
       "All words in wordList are unique."
     ],
-    "examples": "Input: beginWord = \"hit\", endWord = \"cog\", wordList = [\"hot\", \"dot\", \"dog\", \"lot\", \"log\", \"cog\"]. Output: 5. Explanation: One shortest transformation sequence is 'hit' -> 'hot' -> 'dot' -> 'dog' -> 'cog', which is 5 words long."
+    "examples": "Input: beginWord = \"hit\", endWord = \"cog\", wordList = [\"hot\", \"dot\", \"dog\", \"lot\", \"log\", \"cog\"]. Output: 5. Explanation: One shortest transformation sequence is 'hit' -> 'hot' -> 'dot' -> 'dog' -> 'cog', which is 5 words long.",
+    "starterCode": {
+      "java": "class Solution {\n    public int ladderLength(String beginWord, String endWord, List<String> wordList) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:\n        # Write your code here\n        pass",
+      "javascript": "function ladderLength(beginWord, endWord, wordList) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Network Delay Time",
@@ -493,7 +781,13 @@ export const problems = [
       "0 <= wi <= 100",
       "All the pairs (ui, vi) are unique."
     ],
-    "examples": "Input: times = [[2, 1, 1], [2, 3, 1], [3, 4, 1]], n = 4, k = 2. Output: 2. Explanation: The signal is sent from node 2. It reaches node 1 at time 1, node 3 at time 1, and node 4 at time 2 (via node 3). So the maximum time is 2."
+    "examples": "Input: times = [[2, 1, 1], [2, 3, 1], [3, 4, 1]], n = 4, k = 2. Output: 2. Explanation: The signal is sent from node 2. It reaches node 1 at time 1, node 3 at time 1, and node 4 at time 2 (via node 3). So the maximum time is 2.",
+    "starterCode": {
+      "java": "class Solution {\n    public int networkDelayTime(int[][] times, int n, int k) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:\n        # Write your code here\n        pass",
+      "javascript": "function networkDelayTime(times, n, k) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    int networkDelayTime(vector<vector<int>>& times, int n, int k) {\n        // Write your code here\n    }\n};"
+    }
   },
   {
     "title": "Dijkstra Shortest Path",
@@ -504,6 +798,12 @@ export const problems = [
       "0 <= S < V",
       "Weights of edges are non-negative integers."
     ],
-    "examples": "Input: V = 3, adj = [[[1, 1], [2, 6]], [[0, 1], [2, 3]], [[0, 6], [1, 3]]], S = 0. Output: [0, 1, 4]. Explanation: The shortest distance from 0 to 0 is 0. From 0 to 1 is 1. From 0 to 2 is 4 (via node 1, since 1 + 3 = 4 is shorter than direct edge 6)."
+    "examples": "Input: V = 3, adj = [[[1, 1], [2, 6]], [[0, 1], [2, 3]], [[0, 6], [1, 3]]], S = 0. Output: [0, 1, 4]. Explanation: The shortest distance from 0 to 0 is 0. From 0 to 1 is 1. From 0 to 2 is 4 (via node 1, since 1 + 3 = 4 is shorter than direct edge 6).",
+    "starterCode": {
+      "java": "class Solution {\n    public int[] dijkstra(int V, List<List<int[]>> adj, int S) {\n        // Write your code here\n    }\n}",
+      "python": "class Solution:\n    def dijkstra(self, V: int, adj: List[List[List[int]]], S: int) -> List[int]:\n        # Write your code here\n        pass",
+      "javascript": "function dijkstra(V, adj, S) {\n    // Write your code here\n};",
+      "cpp": "class Solution {\npublic:\n    vector<int> dijkstra(int V, vector<vector<pair<int, int>>>& adj, int S) {\n        // Write your code here\n    }\n};"
+    }
   }
 ];
