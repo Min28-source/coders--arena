@@ -6,11 +6,21 @@ datasource db {
   provider = "postgresql"
 }
 
-model Problems { 
+model Problem { 
   id    Int     @id @default(autoincrement()) 
   title String
   description String
   constraints String[]
   examples String
   starterCode Json
+  testCases TestCase[]
+}
+
+model TestCase {
+  id Int @id @default(autoincrement())
+  problemId Int
+  isHidden Boolean @default(true)
+  input String
+  output String
+  problem Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
 }

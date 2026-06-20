@@ -19,6 +19,7 @@ import { Group, Panel, Separator } from "react-resizable-panels";
 export default function Page() {
     type Problems = {
         title: string,
+        id: number
         description: string,
         constraints: string[],
         examples: string,
@@ -31,21 +32,25 @@ export default function Page() {
     }
 
     type Language = "java" | "cpp" | "javascript" | "python"
+
     const socket = useSocket();
     const [started, setStarted] = useState(false);
     const [code, setCode] = useState("");
     const [output, setOutput] = useState("");
     const [problem, setProblem] = useState<Problems | null>(null);
     const [language, setLanguage] = useState<Language>("java")
+    const [problemId, setId] = useState<number>()
 
     useEffect(() => {
         if (!problem) return;
+        console.log(problem)
         setCode(problem.starterCode[language]);
+        setId(problem.id)
     }, [language, problem]);
 
     useEffect(() => {
         socket.on("contest-started", (problem) => {
-            setProblem(problem)
+            setProblem(problem);
             setStarted(true);
         });
         return () => {
@@ -53,9 +58,27 @@ export default function Page() {
         };
     }, [socket]);
 
-    const handleRun = () => {
-        setOutput("Running...\nSample Output");
-    };
+    const handleRun = async () => {
+        const response = await fetch("/api/run", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                code,
+                language,
+                problemId
+            })
+        })
+
+        try {
+            const body = await response.json();
+            console.log(body)
+        } catch (err) {
+            console.log(err);
+            throw new Error("Failed to run code.")
+        }
+    }
 
     const handleSubmit = () => {
         setOutput("Submitted! Verdict: Processing...");
