@@ -1,14 +1,15 @@
 import { prisma } from "./lib/prisma";
-import { problems } from "./problems";
+import { testcases } from "./testcases";
+import {problems} from "./problems"
 
 async function main() {
-    await prisma.problems.deleteMany();
+    await prisma.testCase.deleteMany();
     
-    await prisma.problems.createMany({
-        data: problems
+    await prisma.testCase.createMany({
+        data: testcases
     });
 
-    console.log(`Inserted ${problems.length} problems`);
+    console.log(testcases.length)
 }
 
 main()

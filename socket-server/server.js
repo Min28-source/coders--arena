@@ -76,12 +76,13 @@ io.on("connection", (socket) => {
 
   //starting contest
   socket.on("start-contest", async (roomId) => {
-    const count = await prisma.problems.count();
+    const count = await prisma.problem.count();
     const randomNumber = Math.floor(Math.random() * count);
-    const problem = await prisma.problems.findFirst({
+    const problem = await prisma.problem.findFirst({
       skip : randomNumber
     })
     rooms[roomId].status = "progressing";
+    console.log("Sending problems...")
     io.to(roomId).emit("contest-started", problem);
   });
 

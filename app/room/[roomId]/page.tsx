@@ -43,7 +43,6 @@ export default function Page() {
 
     useEffect(() => {
         if (!problem) return;
-        console.log(problem)
         setCode(problem.starterCode[language]);
         setId(problem.id)
     }, [language, problem]);
@@ -71,13 +70,11 @@ export default function Page() {
             })
         })
 
-        try {
-            const body = await response.json();
-            console.log(body)
-        } catch (err) {
-            console.log(err);
-            throw new Error("Failed to run code.")
+        const body = await response.json();
+        if (!response.ok) {
+            throw new Error(body.error)
         }
+        console.log(body)
     }
 
     const handleSubmit = () => {

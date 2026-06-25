@@ -12,7 +12,9 @@ model Problem {
   description String
   constraints String[]
   examples String
+  outputType String
   starterCode Json
+  runnerCode Json
   testCases TestCase[]
 }
 
