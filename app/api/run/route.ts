@@ -63,17 +63,16 @@ export async function POST(req: NextRequest) {
         for (const tc of problem.testCases) {
             if (tc.isHidden === false) {
                 const response = await handleSubmit(executableCode, language, tc.input);
-                console.log(response);
                 const verdict = await getVerdict(response, tc.output, problem.outputType as OutputType);
                 const result = {
                     input: tc.input,
-                    output: tc.output,
+                    expectedOutput: tc.output,
+                    output: response.run?.output,
                     verdict
                 }
                 results.push(result)
             }
         }
-
         return NextResponse.json({
             results
         })
@@ -118,14 +117,14 @@ async function getVerdict(response: PistonResponse, expectedOutput: string, outp
         case "SIGKILL":
             return "Time Limit Exceeded";
 
-        case "SIGSEGV":
-            return "Runtime Error";
+        // case "SIGSEGV":
+        //     return "Runtime Error";
 
-        case "SIGABRT":
-            return "Runtime Error";
+        // case "SIGABRT":
+        //     return "Runtime Error";
 
-        case "SIGFPE":
-            return "Runtime Error";
+        // case "SIGFPE":
+        //     return "Runtime Error";
 
         default:
             return "Runtime Error";

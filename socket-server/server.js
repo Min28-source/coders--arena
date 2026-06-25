@@ -79,7 +79,14 @@ io.on("connection", (socket) => {
     const count = await prisma.problem.count();
     const randomNumber = Math.floor(Math.random() * count);
     const problem = await prisma.problem.findFirst({
-      skip : randomNumber
+      skip: randomNumber,
+      include: {
+        testCases: {
+          where: {
+            isHidden: false,
+          },
+        },
+      },
     })
     rooms[roomId].status = "progressing";
     console.log("Sending problems...")
