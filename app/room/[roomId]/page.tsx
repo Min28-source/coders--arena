@@ -15,6 +15,7 @@ import { useSocket } from "@/contexts/socketContext";
 import { useEffect, useState } from "react";
 import Editor from "@monaco-editor/react";
 import { Group, Panel, Separator } from "react-resizable-panels";
+import { useParams, useRouter } from "next/navigation";
 
 export default function Page() {
     type Problems = {
@@ -34,19 +35,93 @@ export default function Page() {
     type Language = "java" | "cpp" | "javascript" | "python"
 
     interface TestCaseResult {
-    input: string;
-    expectedOutput: string;
-    output: string;
-    verdict: 'Accepted' | 'Wrong Answer' | 'Runtime Error' | string;
-}
+        input: string;
+        expectedOutput: string;
+        output: string;
+        verdict: 'Accepted' | 'Wrong Answer' | 'Runtime Error' | string;
+    }
 
-    const socket = useSocket();
-    const [started, setStarted] = useState(false);
-    const [code, setCode] = useState("");
-    const [output, setOutput] = useState<TestCaseResult[]>([]);
-    const [problem, setProblem] = useState<Problems | null>(null);
+    type Players = {
+        id: string,
+        name: string
+    }
+
+    const socket = useSocket()
+    const [started, setStarted] = useState<boolean>(false)
+    const [code, setCode] = useState<string>("")
+    const [output, setOutput] = useState<TestCaseResult[]>([])
+    const [problem, setProblem] = useState<Problems | null>(null)
     const [language, setLanguage] = useState<Language>("java")
     const [problemId, setId] = useState<number>()
+    const [endTime, setEndTime] = useState<number>(0)
+    const [timeLeft, setTimeLeft] = useState<number>(0)
+    const [offset, setOffset] = useState<number>(0)
+    const [players, setPlayers] = useState<Players[]>([])
+    const [isHost, setIsHost] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState<boolean>(true)
+    const params = useParams()
+    const router = useRouter()
+
+    type PlayersData = {
+        success: boolean,
+        players?: [],
+        host?: string
+    }
+
+    useEffect(() => {
+        const roomId = params.roomId;
+        const userId = localStorage.getItem("userId");
+        const name = localStorage.getItem("name");
+
+        const handlePlayersUpdate = (data: any) => {
+            console.log(data)
+            setPlayers(data.players);
+            setIsHost(data.host === userId);
+            if (data.endTime) setEndTime(data.endTime);
+            if (data.serverTime) setOffset(Date.now() - data.serverTime);
+        };
+
+        socket.on("players-update", handlePlayersUpdate);
+
+        socket.emit("get-players-data", roomId, (response: PlayersData) => {
+            console.log("Connected:", socket.connected);
+            if (!response.success) {
+                console.log("get players data is fired on client side")
+                router.replace('/not-found');
+                return;
+            }
+
+            console.log(response);
+            setPlayers(response.players as []);
+            setIsHost(response.host === userId);
+        });
+
+        socket.on("contest-started", (data) => {
+            setEndTime(data.endTime);
+            setOffset(Date.now() - data.serverTime)
+            setProblem(data.problem);
+            setStarted(true);
+        });
+
+        setIsLoading(false)
+        return () => {
+            socket.off("players-update", handlePlayersUpdate);
+        };
+    }, []);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const remaining = endTime - Date.now() + offset;
+            if (remaining <= 0) {
+                setTimeLeft(0);
+                clearInterval(interval);
+            } else {
+                setTimeLeft(remaining);
+            }
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [endTime]);
 
     useEffect(() => {
         if (!problem) return;
@@ -54,17 +129,18 @@ export default function Page() {
         setId(problem.id)
     }, [language, problem]);
 
-    useEffect(() => {
-        if (!socket) return;
-        socket.on("contest-started", (problem) => {
-            setProblem(problem);
-            console.log(problem)
-            setStarted(true);
-        });
-        return () => {
-            socket.off("contest-started");
-        };
-    }, [socket]);
+    // useEffect(() => {
+    //     if (!socket) return;
+    //     socket.on("contest-started", (data) => {
+    //         setEndTime(data.endTime);
+    //         setOffset(Date.now() - data.serverTime)
+    //         setProblem(data.problem);
+    //         setStarted(true);
+    //     });
+    //     return () => {
+    //         socket.off("contest-started");
+    //     };
+    // }, [socket]);
 
     const handleRun = async () => {
         try {
@@ -84,7 +160,7 @@ export default function Page() {
             if (!response.ok) {
                 throw new Error(body.error || "Something went wrong")
             }
-            // Update the output state with your API response string
+
             setOutput(body.results);
             console.log(output)
 
@@ -99,24 +175,29 @@ export default function Page() {
 
     return (
         <>
-            {!started && <Sidebar />}
+            {!started && <Sidebar players={players} isHost={isHost} isLoading={isLoading} />}
             {started && (
                 <div className="h-screen flex flex-col select-none">
-                    {/* Top Navbar */}
-                    <div className="h-12 flex items-center justify-between px-4 bg-gray-800 text-white border-b border-gray-700 shrink-0">
-                        <div className="text-2xl font-semibold">Code Arena</div>
 
-                        <div className="flex items-center gap-3">
+                    <div className="h-12 grid grid-cols-3 items-center px-4 bg-gray-800 text-white border-b border-gray-700 shrink-0 select-none">
+
+                        <div className="text-xl md:text-2xl font-semibold justify-self-start truncate">
+                            Code Arena
+                        </div>
+                        <div className="justify-self-center font-mono text-base md:text-lg bg-gray-900/50 px-3 py-0.5 rounded border border-gray-700/50 text-emerald-400 font-medium tracking-wider">
+                            Time left: {Math.floor(timeLeft / 60000)}:{Math.floor((timeLeft % 60000) / 1000).toString().padStart(2, "0")}
+                        </div>
+                        <div className="flex items-center gap-2 md:gap-3 justify-self-end">
                             <button
                                 onClick={handleRun}
-                                className="px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-sm font-medium transition-colors"
+                                className="px-2.5 py-1 md:px-3 bg-blue-600 hover:bg-blue-700 rounded text-xs md:text-sm font-medium transition-colors"
                             >
                                 Run
                             </button>
 
                             <button
                                 onClick={handleSubmit}
-                                className="px-3 py-1 bg-green-600 hover:bg-green-700 rounded text-sm font-medium transition-colors"
+                                className="px-2.5 py-1 md:px-3 bg-green-600 hover:bg-green-700 rounded text-xs md:text-sm font-medium transition-colors"
                             >
                                 Submit
                             </button>
@@ -210,7 +291,6 @@ export default function Page() {
                                     </div>
                                 </Panel>
 
-                                {/* Horizontal Resizer Splitter */}
                                 <Separator className="h-1.5 bg-gray-700 hover:bg-blue-500 transition-colors cursor-row-resize shrink-0" />
 
                                 {/* Bottom Half: Code Running Console Output */}

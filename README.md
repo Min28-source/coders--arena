@@ -1,1 +1,1 @@
-This is going to become a great project, stay tuned!
+The project is almost done. In the final stages.

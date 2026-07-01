@@ -6,7 +6,7 @@ import AddPlayersDialog from "./AddPlayersDialog"
 import { TextShimmer } from "./ui/text-shimmer";
 import { useSocket } from "@/contexts/socketContext";
 import { Button } from "@/components/ui/button"
-import { useRoomValidation } from "@/hooks/useRoomValidation";
+// import { useRoomValidation } from "@/hooks/useRoomValidation";
 import {
   Card,
   CardContent,
@@ -137,32 +137,21 @@ const XIcon = () => (
   </motion.svg>
 );
 
-const Sidebar = () => {
-  type Player = {
-    id: string
-    name: string
-  }
-  const [isOpen, setIsOpen] = useState(false);
+type Player = {
+  id: string,
+  name: string
+}
 
-  const [players, setPlayers] = useState<Player[]>([])
-  const [isHost, setHost] = useState(false)
+type SidebarProps = {
+  players: Player[],
+  isHost: boolean,
+  isLoading : boolean
+}
+
+const Sidebar = ({ players, isHost, isLoading }: SidebarProps) => {
+  const [isOpen, setIsOpen] = useState(false);
   const socket = useSocket();
   const params = useParams();
-  const { isLoading, isValid } = useRoomValidation();
-
-  useEffect(() => {
-     if (isLoading || !isValid) return;
-    const userId = localStorage.getItem("userId");
-    const roomId = params.roomId
-    const handlePlayersUpdate = (data: { players: Player[], host: string }) => {
-      setPlayers(data.players);
-      if (data.host === userId) setHost(true);
-    };
-
-    socket.on("players-update", handlePlayersUpdate);
-    socket.emit("register-user", userId, roomId, localStorage.getItem('name'));
-    socket.emit("get-players-data", roomId);
-  }, [isLoading, isValid, socket, params.roomId])
 
   if (isLoading) {
     return <p>Loading...</p>

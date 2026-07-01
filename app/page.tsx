@@ -36,7 +36,7 @@ export default function Home() {
 
     if (roomId) {
       localStorage.setItem('name', name);
-      socket.emit("join-room", name, roomId);
+      socket.emit("join-room", name, roomId)
       socket.once("joined-room", (userId) => {
         localStorage.setItem('userId', userId)
         router.push(`/room/${roomId}`)
@@ -53,7 +53,7 @@ export default function Home() {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
-
+      
       {/* Letter Glitch Background */}
       <div className="absolute inset-0 -z-20">
         <LetterGlitch
@@ -61,6 +61,8 @@ export default function Home() {
           centerVignette={true}
           outerVignette={false}
           smooth={true}
+          characters={'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$&*()-_+=/[]{};:<>.,0123456789'}
+          glitchColors={['#2b4539', '#61dca3', '#61b3dc']}
         />
       </div>
 

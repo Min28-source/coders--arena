@@ -14,10 +14,30 @@ const io = new Server(server, {
 
 //storages
 let rooms = {}
-const socketToUser = new Map();
-const userToRoom = new Map();
-const userToSockets = new Map();
+const socketToUser = new Map(); // socket --> userId
+const userToRoom = new Map(); // userId --> roomId
+const userToSockets = new Map(); // userId --> [socket1, socket2, ...]
+
 const disconnectTimers = new Map();
+
+//helpers
+function emitPlayers(roomId) {
+  const room = rooms[roomId];
+
+  if (room.status === "progressing") {
+    io.to(roomId).emit("players-update", {
+      players: room.players,
+      host: room.host,
+      serverTime: Date.now(),
+      endTime: room.endTime,
+    });
+  } else {
+    io.to(roomId).emit("players-update", {
+      players: room.players,
+      host: room.host,
+    });
+  }
+}
 
 function addToUserToSockets(key, value) {
   if (!userToSockets.has(key)) {
@@ -33,46 +53,103 @@ io.on("connection", (socket) => {
   socket.on("create-room", (name) => {
     const userId = crypto.randomUUID();
     addToUserToSockets(userId, socket.id);
+    socketToUser.set(socket.id, userId);
+
     const roomId = crypto.randomBytes(8).toString("hex");
 
     rooms[roomId] = {
       host: userId,
       players: [{ id: userId, name: name }],
-      status: "waiting"
+      status: "waiting",
     }
 
     userToRoom.set(userId, roomId);
-    socketToUser.set(socket.id, userId);
     socket.join(roomId);
     socket.emit("room-created", roomId, userId);
+    console.log(rooms[roomId])
   })
 
-  //player joining room
+  //player joining room for the first time
   socket.on("join-room", (name, roomId) => {
-    if (!rooms[roomId]) {
-      socket.emit("Room does not exist.");
-      console.log("Room does not exist.")
+    if (rooms[roomId] === false) {
+      socket.emit("room-not-found");
       return;
     }
 
+    // if (alreadyHasUserId && !disconnectTimers.has(alreadyHasUserId)) {
+    //   return;
+    // }
+
+    // if (disconnectTimers.has(alreadyHasUserId)) {
+    //   clearTimeout(disconnectTimers.get(alreadyHasUserId));
+
+    //   socket.join(roomId);
+
+    //   socketToUser.set(socket.id, alreadyHasUserId);
+    //   addToUserToSockets(alreadyHasUserId, socket.id)
+
+    //   const room = rooms[roomId];
+
+    //   if (room.status === "progressing") {
+    //     io.to(roomId).emit("players-update", {
+    //       players: room.players,
+    //       host: room.host,
+    //       serverTime: Date.now(),
+    //       endTime: room.endTime,
+    //     });
+    //   } else {
+    //     io.to(roomId).emit("players-update", {
+    //       players: room.players,
+    //       host: room.host,
+    //     });
+    //   }
+    //   return;
+    // }
+
     const userId = crypto.randomUUID();
+
     socket.join(roomId);
     addToUserToSockets(userId, socket.id);
     socketToUser.set(socket.id, userId);
     userToRoom.set(userId, roomId);
 
-    rooms[roomId].players.push({ id: userId, name: name });
-    socket.emit("joined-room", userId);
-  })
+    rooms[roomId].players.push({
+      id: userId,
+      name,
+    });
 
-  //players in the room to display over sidebar
-  socket.on("get-players-data", (roomId) => {
-    console.log(`Broadcasting player data to ${roomId}`)
-    io.to(roomId).emit("players-update", {
+    socket.emit("joined-room", userId)
+    const room = rooms[roomId];
+
+    if (room.status === "progressing") {
+      io.to(roomId).emit("players-update", {
+        players: room.players,
+        host: room.host,
+        serverTime: Date.now(),
+        endTime: room.endTime,
+      });
+    } else {
+      io.to(roomId).emit("players-update", {
+        players: room.players,
+        host: room.host,
+      });
+    }
+  });
+
+
+  socket.on("get-players-data", (roomId, callback) => {
+    console.log("Get players data got fired over the server....")
+    if (!rooms[roomId]) {
+      callback({ success: false });
+      return;
+    }
+
+    callback({
+      success: true,
       players: rooms[roomId].players,
       host: rooms[roomId].host
     })
-  });
+  })
 
   //starting contest
   socket.on("start-contest", async (roomId) => {
@@ -87,96 +164,52 @@ io.on("connection", (socket) => {
           },
         },
       },
-    })
+    });
+
+    //timers
+    const currTime = Date.now();
+    const duration = 0.1 * 60 * 1000;
+    const endTime = currTime + duration;
+
     rooms[roomId].status = "progressing";
-    console.log("Sending problems...")
-    io.to(roomId).emit("contest-started", problem);
+    rooms[roomId].endTime = endTime;
+    io.to(roomId).emit("contest-started", { problem, endTime, serverTime: currTime });
   });
-
-  //adding a new socket.id to the map if a user opens a new tab or something
-  socket.on("register-user", (userId, roomId, name) => {
-    if (disconnectTimers.has(userId)) {
-      clearTimeout(disconnectTimers.get(userId));
-      disconnectTimers.delete(userId);
-    }
-
-    if (!socketToUser.get(socket.id)) {
-      socketToUser.set(socket.id, userId);
-    }
-
-    if (!userToSockets.has(userId)) {
-      userToSockets.set(userId, [])
-    }
-
-    userToSockets.get(userId).push(socket.id);
-
-    if (!userToRoom.has(userId)) {
-      userToRoom.set(userId, socket.id)
-    }
-
-    const room = rooms[roomId];
-
-    if (!room.players.find(p => p.id === userId)) {
-      room.players.push({ id: userId, name: name });
-    }
-
-    socket.join(roomId);
-
-    io.to(roomId).emit("players-update", {
-      players: rooms[roomId].players,
-      host: rooms[roomId].host
-    })
-  })
-
-  //check if this user exists
-  socket.on("check-user", (userId, callback) => {
-    if (userToSockets.has(userId)) {
-      callback({ exists: true })
-    } else {
-      callback({ exists: false })
-    }
-  })
-
-  //check if this roomId exists
-  socket.on("validate-roomId", (roomId, callback) => {
-    if (rooms[roomId]) {
-      callback({ exists: true })
-    } else {
-      callback({ exists: false })
-    }
-  })
 
   socket.on("disconnect", () => {
     const userId = socketToUser.get(socket.id);
-    if (!userId) return;
-    console.log(`User disconnected ${socket.id}`)
+    if (!userId) {
+      console.log("User disconnected - fired but the userId was not found inside socketToUser.")
+      return
+    }
+    console.log("an instance of user disconnected with userId: " + userId + "and socket.id: " + socket.id);
     socketToUser.delete(socket.id);
-
     const sockets = userToSockets.get(userId);
-    if (!sockets) return;
-
-    const updated = sockets.filter(id => id !== socket.id);
-    if (updated.length === 0) {
+    const updated = sockets.filter(sock => sock !== socket.id)
+    if (updated.length > 0) {
+      userToSockets.set(userId, updated);
+      return
+    } else {
+      const roomId = userToRoom.get(userId);
       const timer = setTimeout(() => {
         userToSockets.delete(userId);
-        const room = rooms[userToRoom.get(userId)];
-        room.players = room.players.filter(player => player.id != userId);
-        if (userId === room.host) {
-          if (room.players.length > 0) {
-            room.host = room.players[0].id;
-          } else {
-            delete rooms[userToRoom.get(userId)];
-            return;
+        userToRoom.delete(userId);
+        console.log("All data related to the player has been deleted.")
+        rooms[roomId].players = rooms[roomId].players.filter(player => player.id !== userId);
+        if (rooms[roomId].players.length > 0) {
+          console.log(rooms[roomId])
+          if (rooms[roomId].host === userId) {
+            rooms[roomId].host = rooms[roomId].players[0].id
           }
+          io.to(roomId).emit("players-update", {
+            players: rooms[roomId].players,
+            host: rooms[roomId].host,
+          });
+          return;
         }
-        io.to(userToRoom.get(userId)).emit("players-update", {
-          players: room.players,
-          host: room.host
-        });
+        delete rooms[roomId];
       }, 3000);
       disconnectTimers.set(userId, timer);
-    } else {
-      userToSockets.set(userId, updated);
     }
   })
 });

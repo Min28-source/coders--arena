@@ -25,7 +25,7 @@ export function useRoomValidation() {
         }
 
         let userValid = false;
-        let roomValid = false;
+        let roomValid = false; 
         let responses = 0;
 
         const checkDone = () => {
@@ -51,5 +51,5 @@ export function useRoomValidation() {
             checkDone()
         });
     }, [socket, router, params])
-    return { isLoading, isValid }
+    return { isLoading, isValid };
 }

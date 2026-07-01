@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Socket test</title>
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+</head>
+<body>
+  <script>
+    const socket = io("http://localhost:4000", { autoConnect: true });
+    console.log("Connected initially?", socket.connected);
+    
+    socket.emit("get-players-data", "123", (res) => {
+      console.log("Callback received:", res);
+    });
+    
+    socket.on("connect", () => {
+      console.log("Socket connected!");
+    });
+  </script>
+</body>
+</html>

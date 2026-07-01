@@ -12,9 +12,6 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     }
     useEffect(() => {
         socket.connect();
-        return () => {
-            socket.disconnect();
-        }
     }, [socket])
 
     return (
