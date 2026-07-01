@@ -20,25 +20,6 @@ const userToSockets = new Map(); // userId --> [socket1, socket2, ...]
 
 const disconnectTimers = new Map();
 
-//helpers
-function emitPlayers(roomId) {
-  const room = rooms[roomId];
-
-  if (room.status === "progressing") {
-    io.to(roomId).emit("players-update", {
-      players: room.players,
-      host: room.host,
-      serverTime: Date.now(),
-      endTime: room.endTime,
-    });
-  } else {
-    io.to(roomId).emit("players-update", {
-      players: room.players,
-      host: room.host,
-    });
-  }
-}
-
 function addToUserToSockets(key, value) {
   if (!userToSockets.has(key)) {
     userToSockets.set(key, []);
@@ -66,7 +47,6 @@ io.on("connection", (socket) => {
     userToRoom.set(userId, roomId);
     socket.join(roomId);
     socket.emit("room-created", roomId, userId);
-    console.log(rooms[roomId])
   })
 
   //player joining room for the first time
@@ -75,36 +55,6 @@ io.on("connection", (socket) => {
       socket.emit("room-not-found");
       return;
     }
-
-    // if (alreadyHasUserId && !disconnectTimers.has(alreadyHasUserId)) {
-    //   return;
-    // }
-
-    // if (disconnectTimers.has(alreadyHasUserId)) {
-    //   clearTimeout(disconnectTimers.get(alreadyHasUserId));
-
-    //   socket.join(roomId);
-
-    //   socketToUser.set(socket.id, alreadyHasUserId);
-    //   addToUserToSockets(alreadyHasUserId, socket.id)
-
-    //   const room = rooms[roomId];
-
-    //   if (room.status === "progressing") {
-    //     io.to(roomId).emit("players-update", {
-    //       players: room.players,
-    //       host: room.host,
-    //       serverTime: Date.now(),
-    //       endTime: room.endTime,
-    //     });
-    //   } else {
-    //     io.to(roomId).emit("players-update", {
-    //       players: room.players,
-    //       host: room.host,
-    //     });
-    //   }
-    //   return;
-    // }
 
     const userId = crypto.randomUUID();
 
@@ -136,19 +86,46 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("reconnect", async (userId, roomId, callback) => {
+    const room = rooms[roomId];
 
-  socket.on("get-players-data", (roomId, callback) => {
-    console.log("Get players data got fired over the server....")
-    if (!rooms[roomId]) {
+    if (!room || !room.players.find(p => p.id === userId)) {
       callback({ success: false });
       return;
     }
 
-    callback({
-      success: true,
-      players: rooms[roomId].players,
-      host: rooms[roomId].host
-    })
+    if (disconnectTimers.has(userId)) {
+      clearTimeout(disconnectTimers.get(userId));
+      disconnectTimers.delete(userId);
+      socket.join(roomId);
+      socketToUser.set(socket.id, userId);
+    }
+
+    if (rooms[roomId].status === "progressing") {
+      const problem = await prisma.problem.findUnique({
+        where:{
+          id: roomd[roomId].problem
+        }
+      })
+      const currTime = Date.now();
+      
+      callback({
+        success: true,
+        players: rooms[roomId].players,
+        host: rooms[roomId].host,
+        started: true,
+        serverTime: currTime,
+        endTime : rooms[roomId].endTime,
+        problem
+      })
+    } else {
+      callback({
+        success: true,
+        players: rooms[roomId].players,
+        host: rooms[roomId].host,
+        started: false,
+      })
+    }
   })
 
   //starting contest
@@ -173,6 +150,7 @@ io.on("connection", (socket) => {
 
     rooms[roomId].status = "progressing";
     rooms[roomId].endTime = endTime;
+    rooms[roomId].problemId = problem.id
     io.to(roomId).emit("contest-started", { problem, endTime, serverTime: currTime });
   });
 
@@ -186,10 +164,8 @@ io.on("connection", (socket) => {
     socketToUser.delete(socket.id);
     const sockets = userToSockets.get(userId);
     const updated = sockets.filter(sock => sock !== socket.id)
-    if (updated.length > 0) {
-      userToSockets.set(userId, updated);
-      return
-    } else {
+    userToSockets.set(userId, updated);
+    if (updated.length === 0) {
       const roomId = userToRoom.get(userId);
       const timer = setTimeout(() => {
         userToSockets.delete(userId);

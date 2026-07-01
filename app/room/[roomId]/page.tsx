@@ -62,10 +62,14 @@ export default function Page() {
     const params = useParams()
     const router = useRouter()
 
-    type PlayersData = {
+    type ReconnectData = {
         success: boolean,
-        players?: [],
-        host?: string
+        players: [],
+        host: string,
+        started: boolean,
+        problem: Problems,
+        serverTime: number,
+        endTime: number
     }
 
     useEffect(() => {
@@ -82,25 +86,26 @@ export default function Page() {
         };
 
         socket.on("players-update", handlePlayersUpdate);
-
-        socket.emit("get-players-data", roomId, (response: PlayersData) => {
-            console.log("Connected:", socket.connected);
-            if (!response.success) {
-                console.log("get players data is fired on client side")
-                router.replace('/not-found');
-                return;
-            }
-
-            console.log(response);
-            setPlayers(response.players as []);
-            setIsHost(response.host === userId);
-        });
-
         socket.on("contest-started", (data) => {
-            setEndTime(data.endTime);
-            setOffset(Date.now() - data.serverTime)
             setProblem(data.problem);
             setStarted(true);
+            setEndTime(data.endTime);
+            setOffset(Date.now() - data.serverTime)
+        });
+
+        socket.emit("reconnect", userId, roomId, (response: ReconnectData) => {
+            if (!response.success) {
+               router.replace('/not-found')
+               return
+            }
+            setPlayers(response.players as []);
+            setIsHost(response.host === userId);
+            if (response.started) {
+                setStarted(true);
+                setProblem(response.problem);
+                setEndTime(response.endTime);
+                setOffset(Date.now() - response.serverTime)
+            }
         });
 
         setIsLoading(false)
@@ -128,19 +133,6 @@ export default function Page() {
         setCode(problem.starterCode[language]);
         setId(problem.id)
     }, [language, problem]);
-
-    // useEffect(() => {
-    //     if (!socket) return;
-    //     socket.on("contest-started", (data) => {
-    //         setEndTime(data.endTime);
-    //         setOffset(Date.now() - data.serverTime)
-    //         setProblem(data.problem);
-    //         setStarted(true);
-    //     });
-    //     return () => {
-    //         socket.off("contest-started");
-    //     };
-    // }, [socket]);
 
     const handleRun = async () => {
         try {
