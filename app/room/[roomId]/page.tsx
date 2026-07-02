@@ -9,7 +9,17 @@ import {
     DropdownMenuRadioGroup,
     DropdownMenuRadioItem,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
 import { Sidebar } from "@/components/sidebar";
 import { useSocket } from "@/contexts/socketContext";
 import { useEffect, useState } from "react";
@@ -46,6 +56,16 @@ export default function Page() {
         name: string
     }
 
+    type ReconnectData = {
+        success: boolean,
+        players: [],
+        host: string,
+        started: boolean,
+        problem: Problems,
+        serverTime: number,
+        endTime: number
+    }
+
     const socket = useSocket()
     const [started, setStarted] = useState<boolean>(false)
     const [code, setCode] = useState<string>("")
@@ -62,23 +82,11 @@ export default function Page() {
     const params = useParams()
     const router = useRouter()
 
-    type ReconnectData = {
-        success: boolean,
-        players: [],
-        host: string,
-        started: boolean,
-        problem: Problems,
-        serverTime: number,
-        endTime: number
-    }
-
     useEffect(() => {
         const roomId = params.roomId;
         const userId = localStorage.getItem("userId");
-        const name = localStorage.getItem("name");
 
         const handlePlayersUpdate = (data: any) => {
-            console.log(data)
             setPlayers(data.players);
             setIsHost(data.host === userId);
             if (data.endTime) setEndTime(data.endTime);
@@ -92,11 +100,15 @@ export default function Page() {
             setEndTime(data.endTime);
             setOffset(Date.now() - data.serverTime)
         });
+        socket.on("contest-ended", () => {
+            router.replace(`/room/${roomId}/leaderboard`)
+        })
 
         socket.emit("reconnect", userId, roomId, (response: ReconnectData) => {
+            console.log("Connecting...")
             if (!response.success) {
-               router.replace('/not-found')
-               return
+                router.replace('/not-found')
+                return
             }
             setPlayers(response.players as []);
             setIsHost(response.host === userId);
@@ -112,7 +124,7 @@ export default function Page() {
         return () => {
             socket.off("players-update", handlePlayersUpdate);
         };
-    }, []);
+    }, [socket]);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -154,15 +166,38 @@ export default function Page() {
             }
 
             setOutput(body.results);
-            console.log(output)
 
         } catch (error: any) {
             throw new Error(error);
         }
     }
 
-    const handleSubmit = () => {
-        //setOutput("Submitted! Verdict: Processing...");
+    const handleSubmit = async () => {
+        try {
+            const response = await fetch("/api/submit", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    code,
+                    language,
+                    problemId
+                })
+            })
+
+            const body = await response.json();
+            if (!response.ok) {
+                throw new Error(body.error || "Something went wrong")
+            }
+            const data = { passedTestCases: body.passed }
+            const userId = localStorage.getItem("userId")
+            const roomId = params.roomId
+            socket.emit("submit-code", userId, data);
+            router.replace(`/room/${roomId}/leaderboard`)
+        } catch (error: any) {
+            throw new Error(error);
+        }
     };
 
     return (
@@ -170,9 +205,7 @@ export default function Page() {
             {!started && <Sidebar players={players} isHost={isHost} isLoading={isLoading} />}
             {started && (
                 <div className="h-screen flex flex-col select-none">
-
                     <div className="h-12 grid grid-cols-3 items-center px-4 bg-gray-800 text-white border-b border-gray-700 shrink-0 select-none">
-
                         <div className="text-xl md:text-2xl font-semibold justify-self-start truncate">
                             Code Arena
                         </div>
@@ -180,19 +213,40 @@ export default function Page() {
                             Time left: {Math.floor(timeLeft / 60000)}:{Math.floor((timeLeft % 60000) / 1000).toString().padStart(2, "0")}
                         </div>
                         <div className="flex items-center gap-2 md:gap-3 justify-self-end">
-                            <button
+                            <Button
                                 onClick={handleRun}
-                                className="px-2.5 py-1 md:px-3 bg-blue-600 hover:bg-blue-700 rounded text-xs md:text-sm font-medium transition-colors"
+                                className="bg-green-600 hover:bg-green-700 text-white transition-colors"
                             >
                                 Run
-                            </button>
+                            </Button>
 
-                            <button
-                                onClick={handleSubmit}
-                                className="px-2.5 py-1 md:px-3 bg-green-600 hover:bg-green-700 rounded text-xs md:text-sm font-medium transition-colors"
-                            >
-                                Submit
-                            </button>
+                            <Dialog>
+                                <form>
+                                    <DialogTrigger asChild>
+                                        <Button className="bg-blue-600 hover:bg-blue-700 text-white transition-colors">
+                                            Submit
+                                        </Button>
+                                    </DialogTrigger>
+                                    <DialogContent className="sm:max-w-sm">
+                                        <DialogHeader>
+                                            <DialogTitle>Submit Code?</DialogTitle>
+                                            <DialogDescription>
+                                                Code submission is final and you would not be able to review anything again. Are you sure you want to submit?
+                                            </DialogDescription>
+                                        </DialogHeader>
+
+                                        <DialogFooter>
+                                            <DialogClose asChild>
+                                                <Button variant="outline">Cancel</Button>
+                                            </DialogClose>
+                                            <Button
+                                                onClick={handleSubmit}>
+                                                Submit
+                                            </Button>
+                                        </DialogFooter>
+                                    </DialogContent>
+                                </form>
+                            </Dialog>
                         </div>
                     </div>
 
@@ -360,8 +414,9 @@ export default function Page() {
                             </Group>
                         </Panel>
                     </Group>
-                </div>
-            )}
+                </div >
+            )
+            }
         </>
     );
 }

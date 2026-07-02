@@ -88,7 +88,7 @@ io.on("connection", (socket) => {
 
   socket.on("reconnect", async (userId, roomId, callback) => {
     const room = rooms[roomId];
-
+    
     if (!room || !room.players.find(p => p.id === userId)) {
       callback({ success: false });
       return;
@@ -103,21 +103,22 @@ io.on("connection", (socket) => {
 
     if (rooms[roomId].status === "progressing") {
       const problem = await prisma.problem.findUnique({
-        where:{
-          id: roomd[roomId].problem
+        where: {
+          id: rooms[roomId].problem
         }
       })
       const currTime = Date.now();
-      
+
       callback({
         success: true,
         players: rooms[roomId].players,
         host: rooms[roomId].host,
         started: true,
         serverTime: currTime,
-        endTime : rooms[roomId].endTime,
+        endTime: rooms[roomId].endTime,
         problem
       })
+
     } else {
       callback({
         success: true,
@@ -145,13 +146,79 @@ io.on("connection", (socket) => {
 
     //timers
     const currTime = Date.now();
-    const duration = 0.1 * 60 * 1000;
+    const duration = 1 * 60 * 1000;
     const endTime = currTime + duration;
 
     rooms[roomId].status = "progressing";
     rooms[roomId].endTime = endTime;
     rooms[roomId].problemId = problem.id
+    rooms[roomId].results = [];
     io.to(roomId).emit("contest-started", { problem, endTime, serverTime: currTime });
+
+    const timerId = setTimeout(() => {
+      if (rooms[roomId] && rooms[roomId].status === "progressing") {
+        rooms[roomId].status = "finished";
+
+        rooms[roomId].players.forEach(player => {
+          if (!rooms[roomId].results.find(r => r.userId === player.id)) {
+             rooms[roomId].results.push({
+               userId: player.id,
+               name: player.name, 
+               passedTestCases: 0,
+               timeTaken: duration
+             });
+          }
+        });
+
+        rooms[roomId].results.sort((a, b) => {
+           if (b.passedTestCases !== a.passedTestCases) {
+               return b.passedTestCases - a.passedTestCases;
+           } else {
+               return a.timeTaken - b.timeTaken;
+           }
+        });
+
+        io.to(roomId).emit("contest-ended");
+      }
+    }, duration);
+    rooms[roomId].timerId = timerId;
+  });
+
+  socket.on("submit-code", (roomId, submissionData) => {
+    const room = rooms[roomId];
+    const userId = socketToUser.get(socket.id);
+    
+    if (!room || room.status !== "progressing" || !userId) return;
+
+    if (room.results.find(r => r.userId === userId)) return;
+
+    const submitTime = Date.now();
+    const duration = 1 * 60 * 1000;
+    const startTime = room.endTime - duration; 
+
+    const player = room.players.find(p => p.id === userId);
+
+    room.results.push({
+      userId,
+      name: player ? player.name : "Unknown",
+      passedTestCases: submissionData.passedTestCases,
+      timeTaken: submitTime - startTime
+    });
+
+    if (room.results.length === room.players.length) {
+      clearTimeout(room.timerId);
+      room.status = "finished";
+      
+      room.results.sort((a, b) => {
+         if (b.passedTestCases !== a.passedTestCases) {
+             return b.passedTestCases - a.passedTestCases; 
+         } else {
+             return a.timeTaken - b.timeTaken; 
+         }
+      });
+      
+      io.to(roomId).emit("contest-ended");
+    }
   });
 
   socket.on("disconnect", () => {

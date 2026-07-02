@@ -6,7 +6,6 @@ import AddPlayersDialog from "./AddPlayersDialog"
 import { TextShimmer } from "./ui/text-shimmer";
 import { useSocket } from "@/contexts/socketContext";
 import { Button } from "@/components/ui/button"
-// import { useRoomValidation } from "@/hooks/useRoomValidation";
 import {
   Card,
   CardContent,

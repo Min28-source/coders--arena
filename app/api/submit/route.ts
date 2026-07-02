@@ -59,22 +59,19 @@ export async function POST(req: NextRequest) {
         const runnerCode = runnerCodeMap[language];
         const executableCode: string = runnerCode.replace("{{USER_CODE}}", code);
 
-        const results = []
+        let passed = 0;
         for (const tc of problem.testCases) {
-            if (tc.isHidden === false) {
+            if (tc.isHidden === true) {
                 const response = await handleSubmit(executableCode, language, tc.input);
                 const verdict = await getVerdict(response, tc.output, problem.outputType as OutputType);
-                const result = {
-                    input: tc.input,
-                    expectedOutput: tc.output,
-                    output: response.run?.output,
-                    verdict
+                if (verdict === "Accepted") {
+                    passed++;
                 }
-                results.push(result)
             }
         }
+      
         return NextResponse.json({
-            results
+            passed
         })
     } catch (err) {
         console.log(err)
