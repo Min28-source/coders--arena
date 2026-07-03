@@ -95,8 +95,8 @@ export default function Page() {
 
         socket.on("players-update", handlePlayersUpdate);
         socket.on("contest-started", (data) => {
-            setProblem(data.problem);
             setStarted(true);
+            setProblem(data.problem);
             setEndTime(data.endTime);
             setOffset(Date.now() - data.serverTime)
         });
@@ -121,9 +121,6 @@ export default function Page() {
         });
 
         setIsLoading(false)
-        return () => {
-            socket.off("players-update", handlePlayersUpdate);
-        };
     }, [socket]);
 
     useEffect(() => {
@@ -191,9 +188,8 @@ export default function Page() {
                 throw new Error(body.error || "Something went wrong")
             }
             const data = { passedTestCases: body.passed }
-            const userId = localStorage.getItem("userId")
             const roomId = params.roomId
-            socket.emit("submit-code", userId, data);
+            socket.emit("submit-code", roomId, data);
             router.replace(`/room/${roomId}/leaderboard`)
         } catch (error: any) {
             throw new Error(error);

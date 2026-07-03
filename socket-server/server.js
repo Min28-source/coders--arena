@@ -88,7 +88,7 @@ io.on("connection", (socket) => {
 
   socket.on("reconnect", async (userId, roomId, callback) => {
     const room = rooms[roomId];
-    
+
     if (!room || !room.players.find(p => p.id === userId)) {
       callback({ success: false });
       return;
@@ -104,11 +104,10 @@ io.on("connection", (socket) => {
     if (rooms[roomId].status === "progressing") {
       const problem = await prisma.problem.findUnique({
         where: {
-          id: rooms[roomId].problem
+          id: rooms[roomId].problemId
         }
       })
       const currTime = Date.now();
-
       callback({
         success: true,
         players: rooms[roomId].players,
@@ -161,24 +160,25 @@ io.on("connection", (socket) => {
 
         rooms[roomId].players.forEach(player => {
           if (!rooms[roomId].results.find(r => r.userId === player.id)) {
-             rooms[roomId].results.push({
-               userId: player.id,
-               name: player.name, 
-               passedTestCases: 0,
-               timeTaken: duration
-             });
+            rooms[roomId].results.push({
+              userId: player.id,
+              name: player.name,
+              passedTestCases: 0,
+              timeTaken: duration
+            });
           }
         });
 
         rooms[roomId].results.sort((a, b) => {
-           if (b.passedTestCases !== a.passedTestCases) {
-               return b.passedTestCases - a.passedTestCases;
-           } else {
-               return a.timeTaken - b.timeTaken;
-           }
+          if (b.passedTestCases !== a.passedTestCases) {
+            return b.passedTestCases - a.passedTestCases;
+          } else {
+            return a.timeTaken - b.timeTaken;
+          }
         });
 
         io.to(roomId).emit("contest-ended");
+        console.log(rooms[roomId].results)
       }
     }, duration);
     rooms[roomId].timerId = timerId;
@@ -187,20 +187,19 @@ io.on("connection", (socket) => {
   socket.on("submit-code", (roomId, submissionData) => {
     const room = rooms[roomId];
     const userId = socketToUser.get(socket.id);
-    
-    if (!room || room.status !== "progressing" || !userId) return;
 
+    if (!room || room.status !== "progressing" || !userId) return;
     if (room.results.find(r => r.userId === userId)) return;
 
     const submitTime = Date.now();
     const duration = 1 * 60 * 1000;
-    const startTime = room.endTime - duration; 
+    const startTime = room.endTime - duration;
 
     const player = room.players.find(p => p.id === userId);
 
     room.results.push({
       userId,
-      name: player ? player.name : "Unknown",
+      name: player.name,
       passedTestCases: submissionData.passedTestCases,
       timeTaken: submitTime - startTime
     });
@@ -208,18 +207,32 @@ io.on("connection", (socket) => {
     if (room.results.length === room.players.length) {
       clearTimeout(room.timerId);
       room.status = "finished";
-      
+
       room.results.sort((a, b) => {
-         if (b.passedTestCases !== a.passedTestCases) {
-             return b.passedTestCases - a.passedTestCases; 
-         } else {
-             return a.timeTaken - b.timeTaken; 
-         }
+        if (b.passedTestCases !== a.passedTestCases) {
+          return b.passedTestCases - a.passedTestCases;
+        } else {
+          return a.timeTaken - b.timeTaken;
+        }
       });
-      
+
       io.to(roomId).emit("contest-ended");
+      console.log(rooms[roomId].results)
     }
   });
+
+  socket.on("has-ended", (roomId, callback) => {
+    if (rooms[roomId].status === "progressing") {
+      callback({
+        success: false
+      })
+    } else {
+      callback({
+        success: true,
+        results: rooms[roomId].results
+      })
+    }
+  })
 
   socket.on("disconnect", () => {
     const userId = socketToUser.get(socket.id);
@@ -240,7 +253,6 @@ io.on("connection", (socket) => {
         console.log("All data related to the player has been deleted.")
         rooms[roomId].players = rooms[roomId].players.filter(player => player.id !== userId);
         if (rooms[roomId].players.length > 0) {
-          console.log(rooms[roomId])
           if (rooms[roomId].host === userId) {
             rooms[roomId].host = rooms[roomId].players[0].id
           }
