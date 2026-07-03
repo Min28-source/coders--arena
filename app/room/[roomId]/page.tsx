@@ -104,10 +104,10 @@ export default function Page() {
             router.replace(`/room/${roomId}/leaderboard`)
         })
 
-        socket.emit("reconnect", userId, roomId, (response: ReconnectData) => {
+        socket.emit("get-players-data", userId, roomId, (response: ReconnectData) => {
             console.log("Connecting...")
             if (!response.success) {
-                router.replace('/not-found')
+                window.location.replace('/')
                 return
             }
             setPlayers(response.players as []);
@@ -118,9 +118,9 @@ export default function Page() {
                 setEndTime(response.endTime);
                 setOffset(Date.now() - response.serverTime)
             }
+            setIsLoading(false)
         });
 
-        setIsLoading(false)
     }, [socket]);
 
     useEffect(() => {

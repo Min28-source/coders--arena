@@ -44,6 +44,17 @@ const LetterGlitch = ({
   };
 
   const hexToRgb = (hex: string) => {
+    if (hex.startsWith('rgb(')) {
+      const match = /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/i.exec(hex);
+      return match
+        ? {
+            r: parseInt(match[1], 10),
+            g: parseInt(match[2], 10),
+            b: parseInt(match[3], 10)
+          }
+        : null;
+    }
+
     const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
     hex = hex.replace(shorthandRegex, (_m, r, g, b) => {
       return r + r + g + g + b + b;
@@ -114,9 +125,9 @@ const LetterGlitch = ({
   };
 
   const drawLetters = () => {
-    if (!context.current || letters.current.length === 0) return;
+    if (!context.current || letters.current.length === 0 || !canvasRef.current) return;
     const ctx = context.current;
-    const { width, height } = canvasRef.current!.getBoundingClientRect();
+    const { width, height } = canvasRef.current.getBoundingClientRect();
     ctx.clearRect(0, 0, width, height);
     ctx.font = `${fontSize}px monospace`;
     ctx.textBaseline = 'top';
@@ -172,6 +183,7 @@ const LetterGlitch = ({
   };
 
   const animate = () => {
+    if (!canvasRef.current) return;
     const now = Date.now();
     if (now - lastGlitchTime.current >= glitchSpeed) {
       updateLetters();
@@ -208,6 +220,7 @@ const LetterGlitch = ({
     window.addEventListener('resize', handleResize);
 
     return () => {
+      clearTimeout(resizeTimeout);
       cancelAnimationFrame(animationRef.current!);
       window.removeEventListener('resize', handleResize);
     };

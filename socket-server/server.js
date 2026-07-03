@@ -69,36 +69,14 @@ io.on("connection", (socket) => {
     });
 
     socket.emit("joined-room", userId)
-    const room = rooms[roomId];
-
-    if (room.status === "progressing") {
-      io.to(roomId).emit("players-update", {
-        players: room.players,
-        host: room.host,
-        serverTime: Date.now(),
-        endTime: room.endTime,
-      });
-    } else {
-      io.to(roomId).emit("players-update", {
-        players: room.players,
-        host: room.host,
-      });
-    }
   });
 
-  socket.on("reconnect", async (userId, roomId, callback) => {
+  socket.on("get-players-data", async (userId, roomId, callback) => {
     const room = rooms[roomId];
 
     if (!room || !room.players.find(p => p.id === userId)) {
       callback({ success: false });
       return;
-    }
-
-    if (disconnectTimers.has(userId)) {
-      clearTimeout(disconnectTimers.get(userId));
-      disconnectTimers.delete(userId);
-      socket.join(roomId);
-      socketToUser.set(socket.id, userId);
     }
 
     if (rooms[roomId].status === "progressing") {
@@ -247,10 +225,10 @@ io.on("connection", (socket) => {
     userToSockets.set(userId, updated);
     if (updated.length === 0) {
       const roomId = userToRoom.get(userId);
-      const timer = setTimeout(() => {
-        userToSockets.delete(userId);
-        userToRoom.delete(userId);
-        console.log("All data related to the player has been deleted.")
+      userToSockets.delete(userId);
+      userToRoom.delete(userId);
+      console.log("All data related to the player has been deleted.")
+      
         rooms[roomId].players = rooms[roomId].players.filter(player => player.id !== userId);
         if (rooms[roomId].players.length > 0) {
           if (rooms[roomId].host === userId) {
@@ -263,8 +241,6 @@ io.on("connection", (socket) => {
           return;
         }
         delete rooms[roomId];
-      }, 3000);
-      disconnectTimers.set(userId, timer);
     }
   })
 });
