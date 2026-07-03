@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { useSocket } from "@/contexts/socketContext"
 import { useRouter, useSearchParams } from "next/navigation"
+import { Spinner } from "@/components/ui/spinner"
 
 import LetterGlitch from "@/components/LetterGlitch"
 
@@ -14,6 +15,7 @@ export default function Home() {
   const [name, setName] = useState<string>("")
   const [error, setError] = useState<string>("")
   const [roomId, setRoomId] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const socket = useSocket()
   const router = useRouter()
@@ -33,6 +35,7 @@ export default function Home() {
     }
 
     setError("")
+    setIsSubmitting(true)
 
     if (roomId) {
       localStorage.setItem('name', name);
@@ -117,10 +120,17 @@ export default function Home() {
 
             <Button
               type="submit"
-              disabled={!name.trim()}
-              className="w-full bg-gray-700 hover:bg-gray-600 text-gray-200 border border-gray-600"
+              disabled={!name.trim() || isSubmitting}
+              className="w-full bg-gray-700 hover:bg-gray-600 text-gray-200 border border-gray-600 flex items-center justify-center gap-2"
             >
-              Enter Contest
+              {isSubmitting ? (
+                <>
+                  <Spinner />
+                  Entering...
+                </>
+              ) : (
+                "Enter Contest"
+              )}
             </Button>
           </form>
         </CardContent>

@@ -26,6 +26,7 @@ import { useEffect, useState } from "react";
 import Editor from "@monaco-editor/react";
 import { Group, Panel, Separator } from "react-resizable-panels";
 import { useParams, useRouter } from "next/navigation";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function Page() {
     type Problems = {
@@ -79,6 +80,8 @@ export default function Page() {
     const [players, setPlayers] = useState<Players[]>([])
     const [isHost, setIsHost] = useState<boolean>(false)
     const [isLoading, setIsLoading] = useState<boolean>(true)
+    const [isRunning, setIsRunning] = useState<boolean>(false)
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
     const params = useParams()
     const router = useRouter()
 
@@ -144,6 +147,8 @@ export default function Page() {
     }, [language, problem]);
 
     const handleRun = async () => {
+        setIsRunning(true);
+        setOutput([]);
         try {
             const response = await fetch("/api/run", {
                 method: "POST",
@@ -166,10 +171,13 @@ export default function Page() {
 
         } catch (error: any) {
             throw new Error(error);
+        } finally {
+            setIsRunning(false);
         }
     }
 
     const handleSubmit = async () => {
+        setIsSubmitting(true);
         try {
             const response = await fetch("/api/submit", {
                 method: "POST",
@@ -192,6 +200,7 @@ export default function Page() {
             socket.emit("submit-code", roomId, data);
             router.replace(`/room/${roomId}/leaderboard`)
         } catch (error: any) {
+            setIsSubmitting(false);
             throw new Error(error);
         }
     };
@@ -233,11 +242,21 @@ export default function Page() {
 
                                         <DialogFooter>
                                             <DialogClose asChild>
-                                                <Button variant="outline">Cancel</Button>
+                                                <Button variant="outline" disabled={isSubmitting}>Cancel</Button>
                                             </DialogClose>
                                             <Button
-                                                onClick={handleSubmit}>
-                                                Submit
+                                                onClick={handleSubmit}
+                                                disabled={isSubmitting}
+                                                className="flex items-center gap-2"
+                                            >
+                                                {isSubmitting ? (
+                                                    <>
+                                                        <Spinner />
+                                                        Submitting...
+                                                    </>
+                                                ) : (
+                                                    "Submit"
+                                                )}
                                             </Button>
                                         </DialogFooter>
                                     </DialogContent>
@@ -276,8 +295,9 @@ export default function Page() {
                                     </div>
                                 </div>
                             ) : (
-                                <div className="h-full flex items-center justify-center bg-gray-50 text-gray-500">
-                                    Loading problem details...
+                                <div className="h-full flex flex-col items-center justify-center bg-gray-50 text-gray-500 gap-3">
+                                    <Spinner className="size-8 text-gray-400" />
+                                    <span>Loading problem details...</span>
                                 </div>
                             )}
                         </Panel>
@@ -324,6 +344,12 @@ export default function Page() {
                                                 value={code}
                                                 onChange={(val) => setCode(val || "")}
                                                 theme="vs-dark"
+                                                loading={
+                                                    <div className="h-full flex flex-col items-center justify-center bg-[#1e1e1e] text-gray-400 gap-3">
+                                                        <Spinner className="size-6 text-gray-500" />
+                                                        <span className="text-sm font-sans">Loading editor...</span>
+                                                    </div>
+                                                }
                                                 options={{
                                                     automaticLayout: true,
                                                     fontSize: 14,
@@ -344,7 +370,13 @@ export default function Page() {
                                         </div>
 
                                         {/* Main Content Area */}
-                                        <div className="flex-1 p-4 overflow-y-auto space-y-4">
+                                        <div className="flex-1 p-4 overflow-y-auto space-y-4 relative">
+                                            {isRunning && (
+                                                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#1e1e1e]/80 backdrop-blur-sm">
+                                                    <Spinner className="size-8 text-emerald-400 mb-3" />
+                                                    <span className="text-gray-400 text-sm font-sans">Running tests...</span>
+                                                </div>
+                                            )}
                                             {!output || output.length === 0 ? (
                                                 <div className="h-full flex items-center justify-center text-gray-500 font-sans text-sm text-center">
                                                     You must run your code first

@@ -6,6 +6,7 @@ import AddPlayersDialog from "./AddPlayersDialog"
 import { TextShimmer } from "./ui/text-shimmer";
 import { useSocket } from "@/contexts/socketContext";
 import { Button } from "@/components/ui/button"
+import { Spinner } from "@/components/ui/spinner"
 import {
   Card,
   CardContent,
@@ -149,14 +150,21 @@ type SidebarProps = {
 
 const Sidebar = ({ players, isHost, isLoading }: SidebarProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isStarting, setIsStarting] = useState(false);
   const socket = useSocket();
   const params = useParams();
 
   if (isLoading) {
-    return <p>Loading...</p>
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-gray-50 text-gray-500">
+        <Spinner className="mr-2 size-5 text-gray-400" />
+        <span>Loading...</span>
+      </div>
+    )
   }
 
   const handleClick = () => {
+    setIsStarting(true);
     socket.emit("start-contest", params.roomId);
     console.log("Starting contest...")
   }
@@ -272,9 +280,18 @@ const Sidebar = ({ players, isHost, isLoading }: SidebarProps) => {
 
               <CardFooter className="flex flex-col gap-2">
                 <AddPlayersDialog />
-                {isHost && <Button variant="outline" className="w-full" onClick={handleClick}>
-                  Start contest
-                </Button>}
+                {isHost && (
+                  <Button variant="outline" className="w-full flex items-center justify-center gap-2" onClick={handleClick} disabled={isStarting}>
+                    {isStarting ? (
+                      <>
+                        <Spinner />
+                        Starting...
+                      </>
+                    ) : (
+                      "Start contest"
+                    )}
+                  </Button>
+                )}
               </CardFooter>
             </Card>
           </div>
