@@ -6,23 +6,23 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { useSocket } from "@/contexts/socketContext"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { Spinner } from "@/components/ui/spinner"
+import { use } from "react";
 
 import LetterGlitch from "@/components/LetterGlitch"
 
-export default function Home() {
+export default function Home({ searchParams }: { searchParams: Promise<{ roomId: string }> }) {
   const [name, setName] = useState<string>("")
   const [error, setError] = useState<string>("")
-  const [roomId, setRoomId] = useState<string | null>(null)
+  const [roomId, setRoomId] = useState<string | null>("")
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const socket = useSocket()
   const router = useRouter()
-  const searchParams = useSearchParams()
-
+  
   useEffect(() => {
-    const roomParams = searchParams.get("roomId")
+    const roomParams = use(searchParams).roomId
     setRoomId(roomParams)
   }, [searchParams])
 
@@ -56,7 +56,7 @@ export default function Home() {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
-      
+
       {/* Letter Glitch Background */}
       <div className="absolute inset-0 -z-20">
         <LetterGlitch
