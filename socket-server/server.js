@@ -7,8 +7,9 @@ import { prisma } from "./prisma.js";
 const server = http.createServer();
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"]
+    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    methods: ["GET", "POST"],
+    credentials: true
   }
 });
 
@@ -51,7 +52,7 @@ io.on("connection", (socket) => {
 
   //player joining room for the first time
   socket.on("join-room", (name, roomId) => {
-    if (rooms[roomId] === false) {
+    if (!rooms[roomId]) {
       socket.emit("room-not-found");
       return;
     }
@@ -232,7 +233,7 @@ io.on("connection", (socket) => {
       userToSockets.delete(userId);
       userToRoom.delete(userId);
       console.log("All data related to the player has been deleted.")
-
+      if(!rooms[roomId]) return
       rooms[roomId].players = rooms[roomId].players.filter(player => player.id !== userId);
       if (rooms[roomId].players.length > 0) {
         if (rooms[roomId].host === userId) {
@@ -249,6 +250,7 @@ io.on("connection", (socket) => {
   })
 });
 
-server.listen(4000, () => {
+const PORT = process.env.PORT || 4000
+server.listen(PORT, () => {
   console.log("Socket server running on port 4000");
 });
