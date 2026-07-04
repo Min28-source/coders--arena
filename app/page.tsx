@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button"
 import { useSocket } from "@/contexts/socketContext"
 import { useRouter } from "next/navigation"
 import { Spinner } from "@/components/ui/spinner"
-import { use } from "react";
 
 import LetterGlitch from "@/components/LetterGlitch"
 
@@ -22,8 +21,9 @@ export default function Home({ searchParams }: { searchParams: Promise<{ roomId:
   const router = useRouter()
   
   useEffect(() => {
-    const roomParams = use(searchParams).roomId
-    setRoomId(roomParams)
+    searchParams.then((params) => {
+      setRoomId(params.roomId)
+    })
   }, [searchParams])
 
   const handleCreate = () => {

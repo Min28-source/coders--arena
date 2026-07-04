@@ -108,7 +108,6 @@ export default function Page() {
         })
 
         socket.emit("get-players-data", userId, roomId, (response: ReconnectData) => {
-            console.log("Connecting...")
             if (!response.success) {
                 window.location.replace('/')
                 return
@@ -209,7 +208,7 @@ export default function Page() {
         <>
             {!started && <Sidebar players={players} isHost={isHost} isLoading={isLoading} />}
             {started && (
-                <div className="h-screen flex flex-col select-none">
+                <div className="h-screen flex flex-col">
                     <div className="h-12 grid grid-cols-3 items-center px-4 bg-gray-800 text-white border-b border-gray-700 shrink-0 select-none">
                         <div className="text-xl md:text-2xl font-semibold justify-self-start truncate">
                             Code Arena

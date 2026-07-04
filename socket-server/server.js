@@ -68,7 +68,11 @@ io.on("connection", (socket) => {
       name,
     });
 
-    socket.emit("joined-room", userId)
+    socket.emit("joined-room", userId);
+    io.to(roomId).emit("players-update", {
+      players: rooms[roomId].players,
+      host: rooms[roomId].host,
+    });
   });
 
   socket.on("get-players-data", async (userId, roomId, callback) => {
@@ -123,7 +127,7 @@ io.on("connection", (socket) => {
 
     //timers
     const currTime = Date.now();
-    const duration = 1 * 60 * 1000;
+    const duration = 30 * 60 * 1000;
     const endTime = currTime + duration;
 
     rooms[roomId].status = "progressing";
@@ -170,7 +174,7 @@ io.on("connection", (socket) => {
     if (room.results.find(r => r.userId === userId)) return;
 
     const submitTime = Date.now();
-    const duration = 1 * 60 * 1000;
+    const duration = 30 * 60 * 1000;
     const startTime = room.endTime - duration;
 
     const player = room.players.find(p => p.id === userId);
@@ -228,19 +232,19 @@ io.on("connection", (socket) => {
       userToSockets.delete(userId);
       userToRoom.delete(userId);
       console.log("All data related to the player has been deleted.")
-      
-        rooms[roomId].players = rooms[roomId].players.filter(player => player.id !== userId);
-        if (rooms[roomId].players.length > 0) {
-          if (rooms[roomId].host === userId) {
-            rooms[roomId].host = rooms[roomId].players[0].id
-          }
-          io.to(roomId).emit("players-update", {
-            players: rooms[roomId].players,
-            host: rooms[roomId].host,
-          });
-          return;
+
+      rooms[roomId].players = rooms[roomId].players.filter(player => player.id !== userId);
+      if (rooms[roomId].players.length > 0) {
+        if (rooms[roomId].host === userId) {
+          rooms[roomId].host = rooms[roomId].players[0].id
         }
-        delete rooms[roomId];
+        io.to(roomId).emit("players-update", {
+          players: rooms[roomId].players,
+          host: rooms[roomId].host,
+        });
+        return;
+      }
+      delete rooms[roomId];
     }
   })
 });
