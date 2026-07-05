@@ -19,12 +19,15 @@ export default function Home({ searchParams }: { searchParams: Promise<{ roomId:
 
   const socket = useSocket()
   const router = useRouter()
-  
+
   useEffect(() => {
+    console.log("searchParams prop:", searchParams);
+
     searchParams.then((params) => {
-      setRoomId(params.roomId)
-    })
-  }, [searchParams])
+      console.log("resolved params:", params);
+      setRoomId(params.roomId);
+    });
+  }, [searchParams]);
 
   const handleCreate = () => {
     const trimmed = name.trim()
