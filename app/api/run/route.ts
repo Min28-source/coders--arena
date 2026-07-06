@@ -95,7 +95,7 @@ async function handleSubmit(code: string, language: Language, input: string) {
         stdin: input
     }
 
-    const res = await fetch("http://localhost:2000/api/v2/execute", {
+    const res = await fetch(`${process.env.PISTON_API}/api/v2/execute`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(submitable)

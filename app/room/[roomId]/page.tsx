@@ -24,7 +24,6 @@ import { Sidebar } from "@/components/sidebar";
 import { useSocket } from "@/contexts/socketContext";
 import { useEffect, useState } from "react";
 import Editor from "@monaco-editor/react";
-import { Group, Panel, Separator } from "react-resizable-panels";
 import { useParams, useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
 
@@ -208,242 +207,231 @@ export default function Page() {
         <>
             {!started && <Sidebar players={players} isHost={isHost} isLoading={isLoading} />}
             {started && (
-                <div className="h-screen flex flex-col">
-                    <div className="h-12 grid grid-cols-3 items-center px-4 bg-gray-800 text-white border-b border-gray-700 shrink-0 select-none">
+                <div className="min-h-screen flex flex-col bg-white text-gray-900">
+
+                    {/* Header: Dynamic layout matching width requirements */}
+                    <header className="bg-gray-800 border-b border-gray-700 text-white p-3 flex flex-col gap-3 md:grid md:grid-cols-3 md:h-12 md:items-center md:px-4 md:gap-0 sticky top-0 z-50 select-none md:mb-6">
                         <div className="text-xl md:text-2xl font-semibold justify-self-start truncate">
                             Code Arena
                         </div>
-                        <div className="justify-self-center font-mono text-base md:text-lg bg-gray-900/50 px-3 py-0.5 rounded border border-gray-700/50 text-emerald-400 font-medium tracking-wider">
+                        <div className="self-center md:justify-self-center font-mono bg-gray-900/50 px-3 py-1 rounded text-lg md:text-base border border-gray-700/50 text-emerald-400 font-medium tracking-wider">
                             Time left: {Math.floor(timeLeft / 60000)}:{Math.floor((timeLeft % 60000) / 1000).toString().padStart(2, "0")}
                         </div>
-                        <div className="flex items-center gap-2 md:gap-3 justify-self-end">
+                        <div className="flex gap-2 w-full md:w-auto justify-self-end">
                             <Button
                                 onClick={handleRun}
-                                className="bg-green-600 hover:bg-green-700 text-white transition-colors"
+                                className="flex-1 md:flex-none h-11 md:h-9 text-base md:text-sm bg-green-600 hover:bg-green-700 text-white transition-colors"
                             >
                                 Run
                             </Button>
 
                             <Dialog>
-                                <form>
-                                    <DialogTrigger asChild>
-                                        <Button className="bg-blue-600 hover:bg-blue-700 text-white transition-colors">
-                                            Submit
+                                <DialogTrigger asChild>
+                                    <Button className="flex-1 md:flex-none h-11 md:h-9 text-base md:text-sm bg-blue-600 hover:bg-blue-700 text-white transition-colors">
+                                        Submit
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className="sm:max-w-sm">
+                                    <DialogHeader>
+                                        <DialogTitle>Submit Code?</DialogTitle>
+                                        <DialogDescription>
+                                            Code submission is final and you would not be able to review anything again. Are you sure you want to submit?
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <DialogFooter>
+                                        <DialogClose asChild>
+                                            <Button variant="outline" disabled={isSubmitting}>Cancel</Button>
+                                        </DialogClose>
+                                        <Button
+                                            onClick={handleSubmit}
+                                            disabled={isSubmitting}
+                                            className="flex items-center gap-2"
+                                        >
+                                            {isSubmitting ? (
+                                                <>
+                                                    <Spinner />
+                                                    Submitting...
+                                                </>
+                                            ) : (
+                                                "Submit"
+                                            )}
                                         </Button>
-                                    </DialogTrigger>
-                                    <DialogContent className="sm:max-w-sm">
-                                        <DialogHeader>
-                                            <DialogTitle>Submit Code?</DialogTitle>
-                                            <DialogDescription>
-                                                Code submission is final and you would not be able to review anything again. Are you sure you want to submit?
-                                            </DialogDescription>
-                                        </DialogHeader>
-
-                                        <DialogFooter>
-                                            <DialogClose asChild>
-                                                <Button variant="outline" disabled={isSubmitting}>Cancel</Button>
-                                            </DialogClose>
-                                            <Button
-                                                onClick={handleSubmit}
-                                                disabled={isSubmitting}
-                                                className="flex items-center gap-2"
-                                            >
-                                                {isSubmitting ? (
-                                                    <>
-                                                        <Spinner />
-                                                        Submitting...
-                                                    </>
-                                                ) : (
-                                                    "Submit"
-                                                )}
-                                            </Button>
-                                        </DialogFooter>
-                                    </DialogContent>
-                                </form>
+                                    </DialogFooter>
+                                </DialogContent>
                             </Dialog>
                         </div>
-                    </div>
+                    </header>
 
-                    {/* Main Layout Workspace */}
-                    <Group orientation="horizontal" className="flex-1 overflow-hidden">
-                        {/* Left Side - Problem Panel */}
-                        <Panel defaultSize={30} minSize={20}>
-                            {problem ? (
-                                <div className="h-full overflow-y-auto p-4 bg-gray-50">
-                                    <h2 className="text-xl font-semibold mb-2">
+                    {/* Problem Layout View: High readability spacing configuration */}
+                    <main className="max-w-4xl w-full mx-auto px-4 py-5 space-y-6">
+                        {problem ? (
+                            <section className="space-y-6">
+                                <div>
+                                    <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900 mb-2">
                                         {problem.title}
-                                    </h2>
-                                    <p className="text-sm text-gray-700 mb-4 whitespace-pre-wrap">
+                                    </h1>
+                                    <div className="prose max-w-none text-base text-gray-700 whitespace-pre-wrap leading-relaxed">
                                         {problem.description}
-                                    </p>
-
-                                    <div className="mb-4">
-                                        <h3 className="font-medium">Constraints</h3>
-                                        <ul className="text-sm list-disc ml-5 mt-1 space-y-1">
-                                            {problem.constraints.map((prob, idx) => (
-                                                <li key={idx}>{prob}</li>
-                                            ))}
-                                        </ul>
-                                    </div>
-
-                                    <div>
-                                        <h3 className="font-medium mb-1">Example:</h3>
-                                        <pre className="bg-gray-200 p-2 rounded text-sm font-mono break-words whitespace-pre-wrap">
-                                            {problem.examples}
-                                        </pre>
                                     </div>
                                 </div>
-                            ) : (
-                                <div className="h-full flex flex-col items-center justify-center bg-gray-50 text-gray-500 gap-3">
-                                    <Spinner className="size-8 text-gray-400" />
-                                    <span>Loading problem details...</span>
+
+                                <div className="border-t border-gray-200 pt-4">
+                                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Constraints</h3>
+                                    <ul className="text-sm md:text-base list-disc ml-6 space-y-1.5 text-gray-700">
+                                        {problem.constraints.map((prob, idx) => (
+                                            <li key={idx} className="pl-1">{prob}</li>
+                                        ))}
+                                    </ul>
                                 </div>
-                            )}
-                        </Panel>
 
-                        {/* Vertical Resizer Splitter */}
-                        <Separator className="w-1.5 bg-gray-700 hover:bg-blue-500 transition-colors cursor-col-resize shrink-0" />
+                                <div className="border-t border-gray-200 pt-4">
+                                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Example</h3>
+                                    <pre className="bg-gray-100 p-4 rounded-lg text-sm font-mono text-gray-800 break-words border border-gray-200 whitespace-pre-wrap shadow-inner">
+                                        {problem.examples}
+                                    </pre>
+                                </div>
+                            </section>
+                        ) : (
+                            <div className="flex flex-col items-center justify-center text-gray-500 gap-3 py-16">
+                                <Spinner className="size-8 text-gray-400" />
+                                <span className="text-base">Loading problem details...</span>
+                            </div>
+                        )}
 
-                        {/* Right Side - Stacked Workspace (Editor + Output) */}
-                        <Panel defaultSize={70}>
-                            <Group orientation="vertical" className="h-full">
-                                {/* Top Half: Code Editor Container */}
-                                <Panel defaultSize={70} minSize={30}>
-                                    <div className="h-full flex flex-col">
-                                        <div className="bg-[#252526] p-2 border-b border-[#3C3C3C] flex items-center shrink-0">
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
-                                                    <Button
-                                                        variant="outline"
-                                                        className="bg-[#252526] border-[#3C3C3C] text-white hover:bg-[#3c3c3c] hover:text-white h-8"
-                                                    >
-                                                        Language: <span className="ml-1 uppercase text-xs font-bold text-blue-400">{language}</span>
-                                                    </Button>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent className="min-w-56">
-                                                    <DropdownMenuGroup>
-                                                        <DropdownMenuLabel>Select language</DropdownMenuLabel>
-                                                        <DropdownMenuRadioGroup
-                                                            value={language}
-                                                            onValueChange={(value) => setLanguage(value as Language)}
-                                                        >
-                                                            <DropdownMenuRadioItem value="java">Java</DropdownMenuRadioItem>
-                                                            <DropdownMenuRadioItem value="python">Python</DropdownMenuRadioItem>
-                                                            <DropdownMenuRadioItem value="javascript">JavaScript</DropdownMenuRadioItem>
-                                                            <DropdownMenuRadioItem value="cpp">C++</DropdownMenuRadioItem>
-                                                        </DropdownMenuRadioGroup>
-                                                    </DropdownMenuGroup>
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
+                        {/* Editor Layout Block Area */}
+                        <section className="border-t border-gray-200 pt-6 space-y-4">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <h2 className="text-xl font-bold text-gray-900">Code</h2>
+
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            className="w-full sm:w-48 bg-white border-gray-300 text-gray-700 hover:bg-gray-50 h-10 font-medium justify-between"
+                                        >
+                                            <span>Language: <span className="ml-1 uppercase font-bold text-blue-600">{language}</span></span>
+                                            <span className="text-xs text-gray-400">▼</span>
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent className="w-[calc(100vw-2rem)] sm:w-48">
+                                        <DropdownMenuGroup>
+                                            <DropdownMenuLabel>Select language</DropdownMenuLabel>
+                                            <DropdownMenuRadioGroup
+                                                value={language}
+                                                onValueChange={(value) => setLanguage(value as Language)}
+                                            >
+                                                <DropdownMenuRadioItem value="java">Java</DropdownMenuRadioItem>
+                                                <DropdownMenuRadioItem value="python">Python</DropdownMenuRadioItem>
+                                                <DropdownMenuRadioItem value="javascript">JavaScript</DropdownMenuRadioItem>
+                                                <DropdownMenuRadioItem value="cpp">C++</DropdownMenuRadioItem>
+                                            </DropdownMenuRadioGroup>
+                                        </DropdownMenuGroup>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </div>
+
+                            {/* Monaco Editor Container Frame */}
+                            <div className="h-[500px] md:h-[650px] rounded-lg overflow-hidden border border-gray-300 shadow-sm relative">
+                                <Editor
+                                    height="100%"
+                                    language={language}
+                                    value={code}
+                                    onChange={(val) => setCode(val || "")}
+                                    theme="vs-dark"
+                                    loading={
+                                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#1e1e1e] text-gray-400 gap-3">
+                                            <Spinner className="size-6 text-gray-500" />
+                                            <span className="text-sm">Loading editor...</span>
                                         </div>
-                                        <div className="flex-1 min-h-0">
-                                            <Editor
-                                                height="100%"
-                                                language={language}
-                                                value={code}
-                                                onChange={(val) => setCode(val || "")}
-                                                theme="vs-dark"
-                                                loading={
-                                                    <div className="h-full flex flex-col items-center justify-center bg-[#1e1e1e] text-gray-400 gap-3">
-                                                        <Spinner className="size-6 text-gray-500" />
-                                                        <span className="text-sm font-sans">Loading editor...</span>
+                                    }
+                                    options={{
+                                        automaticLayout: true,
+                                        fontSize: 14,
+                                        minimap: { enabled: false },
+                                        scrollBeyondLastLine: false,
+                                    }}
+                                />
+                            </div>
+                        </section>
+
+                        {/* Output Console Display Layout */}
+                        <section className="border-t border-gray-200 pt-6 pb-12 space-y-4">
+                            <h2 className="text-xl font-bold text-gray-900">Test Results</h2>
+
+                            <div className="relative min-h-[120px]">
+                                {isRunning && (
+                                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm py-8">
+                                        <Spinner className="size-8 text-blue-600 mb-2" />
+                                        <span className="text-gray-600 text-sm font-medium">Running code against testcases...</span>
+                                    </div>
+                                )}
+
+                                {!output || output.length === 0 ? (
+                                    <div className="bg-gray-50 border border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 text-sm">
+                                        No execution data found. Write your implementation above and press Run.
+                                    </div>
+                                ) : (
+                                    <div className="space-y-4">
+                                        {output.map((res, index) => {
+                                            const isPassed = res.verdict === "Accepted";
+                                            const isRuntimeError = res.verdict === "Runtime Error";
+
+                                            return (
+                                                <div key={index} className="border border-gray-200 rounded-lg shadow-sm overflow-hidden bg-white">
+                                                    {/* Custom Case Status Strip */}
+                                                    <div className="flex items-center justify-between px-4 py-2.5 bg-gray-50 border-b border-gray-200">
+                                                        <span className="font-semibold text-sm text-gray-700">Case {index + 1}</span>
+                                                        <span className={`px-2.5 py-0.5 text-xs font-bold rounded-md tracking-wide border ${isPassed
+                                                            ? "bg-green-50 text-green-700 border-green-200"
+                                                            : isRuntimeError
+                                                                ? "bg-red-50 text-red-700 border-red-200"
+                                                                : "bg-amber-50 text-amber-700 border-amber-200"
+                                                            }`}>
+                                                            {res.verdict}
+                                                        </span>
                                                     </div>
-                                                }
-                                                options={{
-                                                    automaticLayout: true,
-                                                    fontSize: 14,
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-                                </Panel>
 
-                                <Separator className="h-1.5 bg-gray-700 hover:bg-blue-500 transition-colors cursor-row-resize shrink-0" />
+                                                    {/* Details Frame */}
+                                                    <div className="p-4 space-y-3 font-mono text-xs md:text-sm">
+                                                        <div>
+                                                            <div className="text-gray-500 font-sans font-medium mb-1 text-xs">Input</div>
+                                                            <div className="bg-gray-50 p-2.5 rounded border border-gray-200 text-gray-800 whitespace-pre-wrap break-all">
+                                                                {res.input}
+                                                            </div>
+                                                        </div>
 
-                                {/* Bottom Half: Code Running Console Output */}
-                                <Panel defaultSize={30} minSize={15}>
-                                    <div className="h-full flex flex-col bg-[#1e1e1e] text-gray-200 font-mono">
-                                        {/* Header with Title and Green 'Test result' on the right */}
-                                        <div className="h-8 px-4 bg-[#252526] border-b border-[#3C3C3C] flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-gray-400 select-none shrink-0">
-                                            <span className="text-green-500 normal-case tracking-normal font-sans">Test result</span>
-                                        </div>
-
-                                        {/* Main Content Area */}
-                                        <div className="flex-1 p-4 overflow-y-auto space-y-4 relative">
-                                            {isRunning && (
-                                                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#1e1e1e]/80 backdrop-blur-sm">
-                                                    <Spinner className="size-8 text-emerald-400 mb-3" />
-                                                    <span className="text-gray-400 text-sm font-sans">Running tests...</span>
-                                                </div>
-                                            )}
-                                            {!output || output.length === 0 ? (
-                                                <div className="h-full flex items-center justify-center text-gray-500 font-sans text-sm text-center">
-                                                    You must run your code first
-                                                </div>
-                                            ) : (
-                                                output.map((res, index) => {
-                                                    // Determine layout rules based on passing/failing status
-                                                    const isPassed = res.verdict === "Accepted";
-                                                    const isRuntimeError = res.verdict === "Runtime Error";
-
-                                                    return (
-                                                        <div key={index} className="border border-[#3C3C3C] rounded bg-[#252526]/40 overflow-hidden text-xs">
-                                                            {/* Case Header */}
-                                                            <div className="flex items-center justify-between px-3 py-1.5 bg-[#252526] border-b border-[#3C3C3C]">
-                                                                <span className="font-semibold text-gray-400">Case {index + 1}</span>
-                                                                <span className={`px-2 py-0.5 font-sans font-semibold rounded text-[10px] uppercase tracking-wide ${isPassed
-                                                                    ? "bg-green-950/50 text-green-400 border border-green-800/60"
-                                                                    : isRuntimeError
-                                                                        ? "bg-red-950/50 text-red-400 border border-red-800/60"
-                                                                        : "bg-amber-950/50 text-amber-400 border border-amber-800/60"
-                                                                    }`}>
-                                                                    {res.verdict}
-                                                                </span>
+                                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                            <div>
+                                                                <div className="text-gray-500 font-sans font-medium mb-1 text-xs">Expected Output</div>
+                                                                <div className="bg-emerald-50/50 p-2.5 rounded border border-emerald-100 text-emerald-800 whitespace-pre-wrap break-all">
+                                                                    {res.expectedOutput}
+                                                                </div>
                                                             </div>
 
-                                                            {/* Case Details */}
-                                                            <div className="p-3 space-y-3">
-                                                                {/* Input Row */}
-                                                                <div>
-                                                                    <div className="text-gray-500 font-sans mb-1 text-[11px]">Input</div>
-                                                                    <div className="bg-[#1e1e1e] p-2 rounded border border-[#2d2d2d] text-gray-300 whitespace-pre-wrap">
-                                                                        {res.input}
-                                                                    </div>
-                                                                </div>
-
-                                                                {/* Outputs Row */}
-                                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                                                    {/* Expected Output */}
-                                                                    <div>
-                                                                        <div className="text-gray-500 font-sans mb-1 text-[11px]">Expected</div>
-                                                                        <div className="bg-[#1e1e1e] p-2 rounded border border-[#2d2d2d] text-emerald-400 whitespace-pre-wrap">
-                                                                            {res.expectedOutput}
-                                                                        </div>
-                                                                    </div>
-
-                                                                    {/* Your Output */}
-                                                                    <div>
-                                                                        <div className="text-gray-500 font-sans mb-1 text-[11px]">Your Output</div>
-                                                                        <div className={`bg-[#1e1e1e] p-2 rounded border border-[#2d2d2d] whitespace-pre-wrap ${isPassed ? "text-gray-300" : isRuntimeError ? "text-red-400" : "text-amber-400"
-                                                                            }`}>
-                                                                            {res.output}
-                                                                        </div>
-                                                                    </div>
+                                                            <div>
+                                                                <div className="text-gray-500 font-sans font-medium mb-1 text-xs">Your Output</div>
+                                                                <div className={`p-2.5 rounded border whitespace-pre-wrap break-all ${isPassed
+                                                                    ? "bg-gray-50 border-gray-200 text-gray-800"
+                                                                    : isRuntimeError
+                                                                        ? "bg-red-50/40 border-red-100 text-red-700"
+                                                                        : "bg-amber-50/40 border-amber-100 text-amber-700"
+                                                                    }`}>
+                                                                    {res.output || <span className="italic text-gray-400">Empty return</span>}
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    );
-                                                })
-                                            )}
-                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
-                                </Panel>
-                            </Group>
-                        </Panel>
-                    </Group>
-                </div >
-            )
-            }
+                                )}
+                            </div>
+                        </section>
+                    </main>
+
+                </div>
+            )}
         </>
     );
 }
