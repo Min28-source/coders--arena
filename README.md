@@ -1,1 +1,1 @@
-The project is almost done. In the final stages.
+Updating the readme soon, click the link just check the project out!
