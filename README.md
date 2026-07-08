@@ -185,13 +185,6 @@ an issue or submit a pull request.
 
 ------------------------------------------------------------------------
 
-## License
-
-Choose a license before making the project public (MIT is a common
-choice).
-
-------------------------------------------------------------------------
-
 ## Author
 
 Built by **Minaal Khajuria**.
