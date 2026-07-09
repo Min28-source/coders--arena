@@ -73,12 +73,12 @@ deployment.
 Browser
    │
    ▼
-Next.js Application
+Next.js Application ────────► Socket.IO server
+   │                              |
+   ▼                              ▼
+API Routes  ────────► PostgreSQL (Neon)
    │
-   ▼
-API Routes
-   │
-   ├────────► PostgreSQL (Neon)
+   |
    │
    └────────► Self-hosted Piston API
                     │
